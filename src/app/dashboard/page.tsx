@@ -85,7 +85,7 @@ export default function DashboardPage() {
       <TelemetryCounters taskCounts={taskCounts} />
 
       {/* 3. GAMIFIED 5-STAGE MISSION JOURNEY */}
-      <MissionJourneyRoadmap />
+      <MissionJourneyRoadmap tasks={tasks} competitionStage={topSection?.competitionStage} />
 
       {/* 4. CURRENT ACTIVE MISSION & NEXT BRIEFING SPOTLIGHT */}
       <CurrentMissionSpotlight timeline={timeline} tasks={tasks} />
@@ -94,7 +94,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Season Roadmap (7 Cols) */}
         <div className="lg:col-span-7">
-          <SeasonJourneyTimeline />
+          <SeasonJourneyTimeline competitionStage={topSection?.competitionStage} />
         </div>
 
         {/* Real-time Team Activity Log (5 Cols) */}

@@ -173,19 +173,19 @@ export default function ClassesPage() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <CalendarIcon className="w-6 h-6 text-blue-600" />
-            Class Schedule
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <CalendarIcon className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+            Class & Workshop Schedule
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            e-Yantra official workshops, sessions, and training lectures
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
+            e-Yantra official workshops, training sessions, and mentor lectures
           </p>
         </div>
 
         {isAdmin && (
           <button
             onClick={openAddModal}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all"
           >
             <Plus className="w-4 h-4" />
             Add Class Session
@@ -194,15 +194,15 @@ export default function ClassesPage() {
       </div>
 
       {/* View Selector Filters */}
-      <div className="flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto">
         {(['UPCOMING', 'TODAY', 'WEEK', 'MONTH', 'ALL'] as const).map((view) => (
           <button
             key={view}
             onClick={() => setActiveView(view)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
               activeView === view
-                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold'
-                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-2xs'
+                : 'text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             {view.charAt(0) + view.slice(1).toLowerCase()}

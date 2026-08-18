@@ -186,34 +186,34 @@ export default function HardwarePage() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Cpu className="w-6 h-6 text-blue-600" />
-            Hardware & Components Inventory
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <Cpu className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+            Hardware & Lab Inventory
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Track microcontrollers, sensors, actuators, batteries, storage boxes, and datasheets
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
+            Track microcontrollers, sensors, motor drivers, batteries, component bins, and datasheets
           </p>
         </div>
 
         <button
           onClick={openAddModal}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all"
         >
           <Plus className="w-4 h-4" />
-          Add Hardware
+          Add Component
         </button>
       </div>
 
-      {/* Filters & Search Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-          <Search className="w-4 h-4 text-slate-400" />
+      {/* Search and Filters Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2.5 flex-1 min-w-[200px]">
+          <Search className="w-4 h-4 text-slate-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search component name, location, pinouts..."
-            className="w-full text-xs bg-transparent border-0 outline-none text-slate-800 dark:text-slate-200 placeholder-slate-400"
+            placeholder="Search components, pinouts, locations..."
+            className="w-full text-xs sm:text-sm bg-transparent border-0 outline-none text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
           />
         </div>
 

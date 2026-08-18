@@ -190,18 +190,18 @@ export default function MeetingsPage() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Users2 className="w-6 h-6 text-blue-600" />
-            Team Meetings
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <Users2 className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+            Team Meetings & Briefings
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
             Internal meeting agendas, minutes, decisions, and actionable task conversions
           </p>
         </div>
 
         <button
           onClick={openAddModal}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all"
         >
           <Plus className="w-4 h-4" />
           Schedule Meeting
@@ -211,14 +211,14 @@ export default function MeetingsPage() {
       {/* Meeting Cards List */}
       {loading ? (
         <div className="py-12 flex justify-center text-slate-400">
-          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : meetings.length === 0 ? (
         <EmptyState
           icon={Users2}
-          title="No team meetings scheduled"
-          description="Schedule syncs, strategy sessions, and track meeting decisions & action items."
-          actionLabel="Schedule Meeting"
+          title="No team meetings recorded yet"
+          description="Schedule your team syncs, strategy sessions, and track meeting decisions & action items directly here."
+          actionLabel="Schedule First Meeting"
           onAction={openAddModal}
         />
       ) : (

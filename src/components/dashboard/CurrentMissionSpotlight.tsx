@@ -10,26 +10,24 @@ import {
   Users,
   Video,
   ArrowRight,
-  ExternalLink,
-  Sparkles,
-  Zap,
-  CheckSquare,
+  Plus,
   Radio,
+  CheckSquare,
+  Sparkles,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
 interface SpotlightProps {
   timeline: any[];
   tasks: any[];
-  onTaskCompleted?: (taskId: string) => void;
 }
 
-export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: SpotlightProps) {
+export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
   // Find highest priority active task (IN_PROGRESS or NOT_STARTED with earliest due date)
   const activeTasks = (tasks || []).filter((t) => t.status !== 'COMPLETED');
   const spotlightTask = activeTasks.length > 0 ? activeTasks[0] : null;
 
-  // Find next upcoming meeting / class session
+  // Find next upcoming meeting or class session
   const nextBriefing = (timeline || []).find(
     (item) => item.type === 'MEETING' || item.type === 'CLASS'
   );
@@ -37,25 +35,22 @@ export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: Sp
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* 1. CURRENT ACTIVE MISSION SPOTLIGHT (7 Cols) */}
-      <div className="lg:col-span-7 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-blue-500/30">
-        {/* Ambient Top Glow */}
-        <div className="absolute top-0 right-0 w-64 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-
+      <div className="lg:col-span-7 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-blue-200 dark:border-blue-900/50">
         <div className="space-y-4 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping inline-block" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 inline-block" />
                 ACTIVE MISSION OBJECTIVE
               </span>
             </div>
 
             {spotlightTask && (
               <span
-                className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase ${
+                className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full uppercase border ${
                   spotlightTask.priority === 'HIGH' || spotlightTask.priority === 'URGENT'
-                    ? 'bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-300 border border-red-200 dark:border-red-800'
-                    : 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200 dark:border-amber-800'
+                    ? 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-800'
+                    : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                 }`}
               >
                 {spotlightTask.priority} PRIORITY
@@ -68,82 +63,98 @@ export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: Sp
               <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">
                 {spotlightTask.title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
-                {spotlightTask.description || 'Core technical milestone for current competition deliverable.'}
-              </p>
+              {spotlightTask.description && (
+                <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                  {spotlightTask.description}
+                </p>
+              )}
 
               {/* Mission Metadata Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs">
-                  <span className="text-[10px] font-mono text-slate-400 block uppercase">Category</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 truncate block mt-0.5">
-                    {spotlightTask.category || 'Simulation'}
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 block uppercase font-medium">
+                    Category
+                  </span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm truncate block mt-0.5">
+                    {spotlightTask.category || 'General'}
                   </span>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs">
-                  <span className="text-[10px] font-mono text-slate-400 block uppercase">Assigned To</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 truncate block mt-0.5">
-                    {spotlightTask.assignedTo?.name || 'Whole Team'}
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 block uppercase font-medium">
+                    Assigned To
+                  </span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100 text-xs sm:text-sm truncate block mt-0.5">
+                    {spotlightTask.assignedTo?.name || 'Unassigned'}
                   </span>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs col-span-2 sm:col-span-1">
-                  <span className="text-[10px] font-mono text-slate-400 block uppercase">Target Deadline</span>
-                  <span className="font-semibold text-amber-600 dark:text-amber-400 truncate block mt-0.5">
-                    {spotlightTask.dueDate ? formatDate(spotlightTask.dueDate) : 'Open Season'}
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 col-span-2 sm:col-span-1">
+                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 block uppercase font-medium">
+                    Target Deadline
+                  </span>
+                  <span className="font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm truncate block mt-0.5">
+                    {spotlightTask.dueDate ? formatDate(spotlightTask.dueDate) : 'No due date'}
                   </span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="py-6 text-center space-y-2">
-              <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                All Active Missions Completed!
-              </p>
-              <p className="text-xs text-slate-400">
-                Create new competition milestones from your Tasks Kanban board.
-              </p>
+            <div className="py-8 text-center space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
+                <CheckSquare className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  No active tasks yet
+                </p>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
+                  Your team&apos;s mission board is ready. Add your first competition task to get started.
+                </p>
+              </div>
+              <Link
+                href="/tasks"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Add First Task
+              </Link>
             </div>
           )}
         </div>
 
         {/* Action Controls */}
-        <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
           <Link
             href="/tasks"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline"
           >
             <CheckSquare className="w-3.5 h-3.5" />
-            Open Mission Kanban Board →
+            Open Tasks Kanban Board →
           </Link>
 
           {spotlightTask && (
             <Link
               href="/tasks"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl shadow-neon-blue transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95"
             >
-              <span>Execute Mission</span>
+              <span>View Task Details</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}
         </div>
       </div>
 
-      {/* 2. NEXT MISSION BRIEFING / LIVE SYNC (5 Cols) */}
-      <div className="lg:col-span-5 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-purple-500/30">
-        {/* Ambient Top Glow */}
-        <div className="absolute top-0 right-0 w-64 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
-
+      {/* 2. NEXT MISSION BRIEFING / MEETING (5 Cols) */}
+      <div className="lg:col-span-5 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-purple-200 dark:border-purple-900/50">
         <div className="space-y-4 relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30 flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 animate-pulse" />
-              UPCOMING MISSION BRIEFING
+            <span className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800 flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              UPCOMING BRIEFING
             </span>
-            <span className="text-[11px] font-mono text-slate-400">
-              {nextBriefing?.type || 'TEAM SYNC'}
+            <span className="text-xs font-mono text-slate-500 font-semibold">
+              {nextBriefing?.type || 'MEETINGS'}
             </span>
           </div>
 
@@ -152,17 +163,19 @@ export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: Sp
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight">
                 {nextBriefing.title}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-                {nextBriefing.meta || 'Internal strategy alignment, task distribution, and robotics debugging.'}
-              </p>
+              {nextBriefing.meta && (
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 line-clamp-2">
+                  {nextBriefing.meta}
+                </p>
+              )}
 
-              <div className="p-3 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/40 text-xs space-y-1.5">
+              <div className="p-3.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/50 text-xs space-y-1.5">
                 <div className="flex items-center justify-between font-mono">
-                  <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1 font-semibold">
                     <Calendar className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                     Date
                   </span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                  <span className="font-bold text-slate-900 dark:text-slate-100">
                     {new Date(nextBriefing.date).toLocaleDateString(undefined, {
                       weekday: 'short',
                       month: 'short',
@@ -173,11 +186,11 @@ export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: Sp
 
                 {nextBriefing.time && (
                   <div className="flex items-center justify-between font-mono">
-                    <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1 font-semibold">
                       <Clock className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                       Time
                     </span>
-                    <span className="font-bold text-purple-700 dark:text-purple-300">
+                    <span className="font-bold text-purple-800 dark:text-purple-300">
                       {nextBriefing.time}
                     </span>
                   </div>
@@ -185,34 +198,47 @@ export function CurrentMissionSpotlight({ timeline, tasks, onTaskCompleted }: Sp
               </div>
             </div>
           ) : (
-            <div className="py-6 text-center space-y-2">
-              <Users className="w-8 h-8 text-purple-400 mx-auto" />
-              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                No Briefings Scheduled
-              </p>
-              <p className="text-xs text-slate-400">
-                Schedule your next sprint review or mentorship call.
-              </p>
+            <div className="py-8 text-center space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto">
+                <Users className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  No upcoming meetings
+                </p>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xs mx-auto">
+                  Add your team&apos;s first meeting agenda or class session.
+                </p>
+              </div>
+              <Link
+                href="/meetings"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Schedule Meeting
+              </Link>
             </div>
           )}
         </div>
 
         {/* Briefing CTA */}
-        <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <Link
             href="/meetings"
-            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+            className="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline"
           >
             All Meetings & Minutes →
           </Link>
 
-          <Link
-            href="/meetings"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl shadow-xs transition-all active:scale-95"
-          >
-            <Video className="w-3.5 h-3.5" />
-            <span>Join Briefing Room</span>
-          </Link>
+          {nextBriefing && (
+            <Link
+              href={nextBriefing.link || '/meetings'}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
+            >
+              <Video className="w-3.5 h-3.5" />
+              <span>Open Meeting</span>
+            </Link>
+          )}
         </div>
       </div>
     </div>

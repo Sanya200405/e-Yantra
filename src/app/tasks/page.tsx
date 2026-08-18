@@ -253,45 +253,45 @@ export default function TasksPage() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <CheckSquare className="w-6 h-6 text-blue-600" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <CheckSquare className="w-7 h-7 text-blue-600 dark:text-blue-400" />
             Task Management Board
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
             Real task assignments, deadlines, category tags, and relational linkages
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {/* View Toggle */}
-          <div className="flex items-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+          <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
             <button
               onClick={() => setViewMode('KANBAN')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1 transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors ${
                 viewMode === 'KANBAN'
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
+                  : 'text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
-              <Kanban className="w-3.5 h-3.5" />
+              <Kanban className="w-4 h-4" />
               <span className="hidden sm:inline">Kanban</span>
             </button>
             <button
               onClick={() => setViewMode('LIST')}
-              className={`p-1.5 rounded-md text-xs font-medium flex items-center gap-1 transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors ${
                 viewMode === 'LIST'
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 shadow-xs'
+                  : 'text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
-              <List className="w-3.5 h-3.5" />
+              <List className="w-4 h-4" />
               <span className="hidden sm:inline">List</span>
             </button>
           </div>
 
           <button
             onClick={openAddModal}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all"
           >
             <Plus className="w-4 h-4" />
             Add Task
@@ -300,23 +300,23 @@ export default function TasksPage() {
       </div>
 
       {/* Filters & Search Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-          <Search className="w-4 h-4 text-slate-400" />
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2.5 flex-1 min-w-[200px]">
+          <Search className="w-4 h-4 text-slate-500" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search tasks..."
-            className="w-full text-xs bg-transparent border-0 outline-none text-slate-800 dark:text-slate-200 placeholder-slate-400"
+            placeholder="Search tasks by title, category, assignee..."
+            className="w-full text-xs sm:text-sm bg-transparent border-0 outline-none text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
           >
             <option value="ALL">All Priorities</option>
             <option value="LOW">Low</option>
@@ -328,7 +328,7 @@ export default function TasksPage() {
           <select
             value={assigneeFilter}
             onChange={(e) => setAssigneeFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
           >
             <option value="ALL">All Members</option>
             {teamMembers.map((m) => (
@@ -342,7 +342,7 @@ export default function TasksPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
             >
               <option value="ALL">All Categories</option>
               {categories.map((c) => (
@@ -403,88 +403,79 @@ export default function TasksPage() {
                     return (
                       <div
                         key={t.id}
-                        className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-2"
+                        className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-blue-400 dark:hover:border-blue-500 transition-all space-y-2.5"
                       >
-                        <div className="flex items-start justify-between gap-1.5">
+                        <div className="flex items-start justify-between gap-2">
                           <span
-                            className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                            className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
                               t.priority === 'URGENT'
-                                ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300'
+                                ? 'bg-red-100 text-red-900 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-800'
                                 : t.priority === 'HIGH'
-                                ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
+                                ? 'bg-orange-100 text-orange-900 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800'
                                 : t.priority === 'MEDIUM'
-                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                                ? 'bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                                : 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                             }`}
                           >
                             {t.priority}
                           </span>
 
-                          <span className="text-[10px] font-medium text-slate-400 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                            {t.category}
+                          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
+                            {t.category || 'General'}
                           </span>
                         </div>
 
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 line-clamp-2">
+                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 line-clamp-2 leading-snug">
                           {t.title}
                         </h4>
 
                         {t.description && (
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+                          <p className="text-xs text-slate-700 dark:text-slate-300 line-clamp-2 leading-relaxed font-medium">
                             {t.description}
                           </p>
                         )}
 
                         {/* Relational Badges */}
-                        <div className="flex flex-wrap gap-1 pt-1">
+                        <div className="flex flex-wrap gap-1.5 pt-1">
                           {t.lecture && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300">
-                              <Video className="w-2.5 h-2.5" /> {t.lecture.title}
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                              <Video className="w-3 h-3 text-purple-600 dark:text-purple-400" /> {t.lecture.title}
                             </span>
                           )}
                           {t.note && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                              <FileText className="w-2.5 h-2.5" /> {t.note.title}
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                              <FileText className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> {t.note.title}
                             </span>
                           )}
                           {t.hardware && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-semibold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                              <Cpu className="w-2.5 h-2.5" /> {t.hardware.componentName}
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-100 text-cyan-900 dark:bg-cyan-950/60 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                              <Cpu className="w-3 h-3 text-cyan-600 dark:text-cyan-400" /> {t.hardware.componentName}
+                            </span>
+                          )}
+                          {t.gitRepo && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-200 text-slate-900 dark:bg-slate-800 dark:text-slate-300">
+                              <Sparkles className="w-3 h-3 text-amber-500" /> {t.gitRepo.name}
                             </span>
                           )}
                         </div>
 
+                        {/* Card Footer: Assignee, Due date & Actions */}
                         <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-                          {/* Assignee Avatar */}
-                          <div className="flex items-center gap-1.5">
-                            <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">
-                              {t.assignedTo?.name ? t.assignedTo.name.charAt(0) : '?'}
-                            </div>
-                            <span className="text-[11px] text-slate-600 dark:text-slate-400 truncate max-w-[80px]">
-                              {t.assignedTo?.name || 'Unassigned'}
-                            </span>
-                          </div>
-
-                          {/* Due Date & Actions */}
                           <div className="flex items-center gap-2">
-                            {t.dueDate && (
-                              <span
-                                className={`text-[10px] font-medium flex items-center gap-0.5 ${
-                                  overdue
-                                    ? 'text-red-600 font-bold'
-                                    : 'text-slate-400'
-                                }`}
-                              >
-                                <Clock className="w-3 h-3" />
-                                {formatDate(t.dueDate)}
+                            {t.assignedTo ? (
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[10px]">
+                                  {t.assignedTo.name.charAt(0)}
+                                </div>
+                                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[90px]">
+                                  {t.assignedTo.name}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-slate-500 dark:text-slate-400 italic">
+                                Unassigned
                               </span>
                             )}
-                            <button
-                              onClick={() => openEditModal(t)}
-                              className="p-1 rounded text-slate-400 hover:text-blue-600"
-                            >
-                              <Edit2 className="w-3 h-3" />
-                            </button>
                             <button
                               onClick={() => handleDelete(t.id)}
                               className="p-1 rounded text-slate-400 hover:text-red-600"
