@@ -3,9 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Target,
   Clock,
-  CheckCircle2,
   Calendar,
   Users,
   Video,
@@ -13,7 +11,6 @@ import {
   Plus,
   Radio,
   CheckSquare,
-  Sparkles,
 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 
@@ -23,11 +20,9 @@ interface SpotlightProps {
 }
 
 export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
-  // Find highest priority active task (IN_PROGRESS or NOT_STARTED with earliest due date)
   const activeTasks = (tasks || []).filter((t) => t.status !== 'COMPLETED');
   const spotlightTask = activeTasks.length > 0 ? activeTasks[0] : null;
 
-  // Find next upcoming meeting or class session
   const nextBriefing = (timeline || []).find(
     (item) => item.type === 'MEETING' || item.type === 'CLASS'
   );
@@ -35,7 +30,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
       {/* 1. CURRENT ACTIVE MISSION SPOTLIGHT (7 Cols) */}
-      <div className="lg:col-span-7 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-blue-200 dark:border-blue-900/50">
+      <div className="lg:col-span-7 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-slate-200 dark:border-slate-800">
         <div className="space-y-4 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -49,7 +44,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
               <span
                 className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full uppercase border ${
                   spotlightTask.priority === 'HIGH' || spotlightTask.priority === 'URGENT'
-                    ? 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-800'
+                    ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800'
                     : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                 }`}
               >
@@ -146,7 +141,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
       </div>
 
       {/* 2. NEXT MISSION BRIEFING / MEETING (5 Cols) */}
-      <div className="lg:col-span-5 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-purple-200 dark:border-purple-900/50">
+      <div className="lg:col-span-5 tech-panel p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border-slate-200 dark:border-slate-800">
         <div className="space-y-4 relative z-10">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800 flex items-center gap-1.5">
@@ -169,10 +164,10 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
                 </p>
               )}
 
-              <div className="p-3.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/50 text-xs space-y-1.5">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5">
                 <div className="flex items-center justify-between font-mono">
                   <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1 font-semibold">
-                    <Calendar className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                    <Calendar className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     Date
                   </span>
                   <span className="font-bold text-slate-900 dark:text-slate-100">
@@ -187,10 +182,10 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
                 {nextBriefing.time && (
                   <div className="flex items-center justify-between font-mono">
                     <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1 font-semibold">
-                      <Clock className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                      <Clock className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                       Time
                     </span>
-                    <span className="font-bold text-purple-800 dark:text-purple-300">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       {nextBriefing.time}
                     </span>
                   </div>
@@ -212,7 +207,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
               </div>
               <Link
                 href="/meetings"
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Schedule Meeting
@@ -225,7 +220,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
         <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <Link
             href="/meetings"
-            className="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline"
+            className="text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline"
           >
             All Meetings & Minutes →
           </Link>
@@ -233,7 +228,7 @@ export function CurrentMissionSpotlight({ timeline, tasks }: SpotlightProps) {
           {nextBriefing && (
             <Link
               href={nextBriefing.link || '/meetings'}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95"
             >
               <Video className="w-3.5 h-3.5" />
               <span>Open Meeting</span>

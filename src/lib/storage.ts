@@ -1,6 +1,5 @@
 import { put, del } from '@vercel/blob';
 import { prisma } from '@/lib/prisma';
-import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 
@@ -44,7 +43,10 @@ export function validateFileType(mimeType: string, filename: string): { valid: b
   const ext = path.extname(filename).toLowerCase();
   
   // Block dangerous executable extensions
-  const dangerousExtensions = ['.exe', '.bat', '.cmd', '.sh', '.vbs', '.js', '.ts', '.jsx', '.tsx', '.php', '.phtml', '.py', '.rb', '.pl', '.jar', '.msi', '.scr', '.com'];
+  const dangerousExtensions = [
+    '.exe', '.bat', '.cmd', '.sh', '.vbs', '.js', '.ts', '.jsx', '.tsx',
+    '.php', '.phtml', '.py', '.rb', '.pl', '.jar', '.msi', '.scr', '.com'
+  ];
   if (dangerousExtensions.includes(ext)) {
     return {
       valid: false,
@@ -62,7 +64,7 @@ export function validateFileType(mimeType: string, filename: string): { valid: b
 
   return {
     valid: false,
-    reason: `File format not supported. Please upload PDF, images (PNG, JPG, WEBP), Office docs (DOCX, XLSX, PPTX), data files (CSV, JSON, TXT), or archives (ZIP).`,
+    reason: `File format (${ext || mimeType}) not supported. Please upload PDF, images (PNG, JPG, WEBP), Office docs (DOCX, XLSX, PPTX), data files (CSV, JSON, TXT), or archives (ZIP).`,
   };
 }
 
@@ -88,6 +90,7 @@ export interface UploadResult {
 
 /**
  * Upload a file to Cloud Storage (Vercel Blob) or Database Blob storage with PostgreSQL metadata tracking.
+ * Guarantees zero-loss persistent storage across ephemeral server redeployments.
  */
 export async function uploadToStorage(
   file: File,
@@ -122,14 +125,16 @@ export async function uploadToStorage(
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // 3. Cloud Object Storage (Vercel Blob) if token exists
+  // 3. Cloud Object Storage (Vercel Blob) if token is configured
   if (hasBlobToken) {
+    let uploadedBlobUrl: string | null = null;
     try {
       const blob = await put(storagePath, file, {
         access: 'public',
         contentType: file.type || 'application/octet-stream',
         addRandomSuffix: false,
       });
+      uploadedBlobUrl = blob.url;
 
       const fileRecord = await prisma.uploadedFile.create({
         data: {
@@ -157,11 +162,17 @@ export async function uploadToStorage(
         createdAt: fileRecord.createdAt,
       };
     } catch (blobError: any) {
-      console.error('Vercel Blob upload failed, falling back to database storage:', blobError);
+      console.error('Vercel Blob upload failed, falling back to persistent database storage:', blobError);
+      // Clean up orphaned blob if database record creation failed
+      if (uploadedBlobUrl) {
+        try {
+          await del(uploadedBlobUrl);
+        } catch {}
+      }
     }
   }
 
-  // 4. Instant Zero-Config Database Storage Fallback (Always works on Vercel and local)
+  // 4. Instant Zero-Config Database Storage Fallback (Permanent across server restarts and redeployments)
   const base64Data = buffer.toString('base64');
   const tempId = `file_${uniquePrefix}`;
 
@@ -169,7 +180,7 @@ export async function uploadToStorage(
     data: {
       filename: file.name,
       storageKey: storagePath,
-      url: `/api/upload/${tempId}`, // Will be updated with actual ID
+      url: `/api/upload/${tempId}`,
       size: file.size,
       mimeType: file.type || 'application/octet-stream',
       dataBase64: base64Data,
@@ -225,7 +236,7 @@ export async function deleteFromStorage(
   }
 
   const targetUrl = fileRecord?.url || identifier.url;
-  const isBlobUrl = targetUrl?.includes('public.blob.vercel-storage.com') || targetUrl?.startsWith('https://');
+  const isBlobUrl = targetUrl?.includes('public.blob.vercel-storage.com') || (targetUrl?.startsWith('https://') && !targetUrl.includes('/api/upload/'));
 
   if (isBlobUrl && targetUrl) {
     try {

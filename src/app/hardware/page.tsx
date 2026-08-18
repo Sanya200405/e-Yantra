@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import {
   Cpu,
   Plus,
@@ -20,6 +21,7 @@ import { Modal } from '@/components/ui/Modal';
 
 export default function HardwarePage() {
   const { user } = useAuth();
+  const toast = useToast();
   const [hardware, setHardware] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,6 +146,7 @@ export default function HardwarePage() {
 
       if (res.ok) {
         setIsModalOpen(false);
+        toast.success(editingItem ? 'Hardware item updated ✓' : 'Hardware item added ✓');
         fetchHardware();
       } else {
         const d = await res.json();
@@ -161,6 +164,7 @@ export default function HardwarePage() {
     try {
       const res = await fetch(`/api/hardware/${id}`, { method: 'DELETE' });
       if (res.ok) {
+        toast.success('Component removed');
         fetchHardware();
       }
     } catch (err) {
@@ -221,7 +225,7 @@ export default function HardwarePage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
           >
             {categories.map((c) => (
               <option key={c} value={c}>
@@ -233,7 +237,7 @@ export default function HardwarePage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200"
           >
             <option value="ALL">All Statuses</option>
             <option value="AVAILABLE">Available</option>
@@ -248,7 +252,7 @@ export default function HardwarePage() {
       {/* Hardware Grid */}
       {loading ? (
         <div className="py-12 flex justify-center text-slate-400">
-          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : filteredHardware.length === 0 ? (
         <EmptyState
@@ -267,7 +271,7 @@ export default function HardwarePage() {
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     {item.category}
                   </span>
 
@@ -292,14 +296,14 @@ export default function HardwarePage() {
                     {item.componentName}
                   </h3>
                   <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
+                    className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-md border ${
                       item.status === 'AVAILABLE'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300'
+                        ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                         : item.status === 'IN_USE'
-                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'
+                        ? 'bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                         : item.status === 'RESERVED'
-                        ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
-                        : 'bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300'
+                        ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+                        : 'bg-red-100 text-red-900 dark:bg-red-950/60 dark:text-red-300 border-red-200 dark:border-red-800'
                     }`}
                   >
                     {item.status.replace('_', ' ')}
@@ -307,7 +311,7 @@ export default function HardwarePage() {
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-slate-800 dark:text-slate-200 mb-3 font-semibold">
-                  <span className="font-bold text-slate-900 dark:text-slate-100">
+                  <span className="font-bold text-slate-900 dark:text-slate-100 font-mono">
                     Qty: {item.quantity}
                   </span>
                   {item.location && (
@@ -343,7 +347,7 @@ export default function HardwarePage() {
                     Datasheet / Pinout
                   </a>
                 ) : (
-                  <span className="text-xs text-slate-500 dark:text-slate-400">No datasheet</span>
+                  <span className="text-xs text-slate-500">No datasheet</span>
                 )}
 
                 {item.owner && (

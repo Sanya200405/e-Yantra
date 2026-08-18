@@ -33,7 +33,7 @@ export function Header({
         {/* Global Search Trigger */}
         <button
           onClick={onOpenSearch}
-          className="hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors border border-slate-300 dark:border-slate-700 w-56 md:w-72 shadow-2xs"
+          className="hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors border border-slate-300 dark:border-slate-700 w-56 md:w-72 shadow-2xs"
         >
           <Search className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           <span className="font-semibold">Search workspace...</span>
@@ -49,9 +49,9 @@ export function Header({
           href="https://portal.e-yantra.org"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-orange-700 dark:text-orange-400 bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 rounded-xl border border-orange-200 dark:border-orange-900/50 transition-colors shadow-2xs"
+          className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 rounded-xl border border-slate-300 dark:border-slate-700 transition-colors shadow-2xs"
         >
-          <ExternalLink className="w-3.5 h-3.5" />
+          <ExternalLink className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
           <span>Official Portal</span>
         </a>
 
@@ -65,7 +65,7 @@ export function Header({
           {resolvedTheme === 'dark' ? (
             <Sun className="w-4 h-4 text-amber-400 hover:rotate-45 transition-transform" />
           ) : (
-            <Moon className="w-4 h-4 text-indigo-600 hover:-rotate-12 transition-transform" />
+            <Moon className="w-4 h-4 text-blue-600 hover:-rotate-12 transition-transform" />
           )}
         </button>
 
@@ -81,7 +81,7 @@ export function Header({
         {/* Quick Create Action Button */}
         <button
           onClick={onOpenQuickAction}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-neon-blue transition-all"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-subtle-blue transition-all"
         >
           <Plus className="w-4 h-4" />
           <span>Quick Create</span>
@@ -90,7 +90,7 @@ export function Header({
         {/* User initials bubble */}
         <div
           title={user?.name || 'User'}
-          className="w-9 h-9 rounded-full bg-linear-to-br from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center text-xs font-extrabold shadow-sm select-none ring-2 ring-white dark:ring-slate-900"
+          className="w-9 h-9 rounded-full bg-linear-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-xs font-extrabold shadow-xs select-none ring-2 ring-white dark:ring-slate-900"
         >
           {user?.name?.charAt(0).toUpperCase() || 'U'}
         </div>

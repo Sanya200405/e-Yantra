@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import {
   GitBranch,
   GitCommit,
@@ -24,6 +25,7 @@ import { formatDate, formatDateTime } from '@/lib/utils';
 
 export default function GitPage() {
   const { isAdmin } = useAuth();
+  const toast = useToast();
   const [gitData, setGitData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'commits' | 'branches' | 'issues' | 'prs' | 'contributors'>('commits');
@@ -77,6 +79,7 @@ export default function GitPage() {
         setRepositoryUrl('');
         setRepositoryName('');
         setDescription('');
+        toast.success('Repository connected ✓');
         fetchGit();
       } else {
         const d = await res.json();
@@ -94,6 +97,7 @@ export default function GitPage() {
     try {
       const res = await fetch(`/api/git?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
+        toast.success('Repository disconnected');
         fetchGit();
       }
     } catch (err) {
@@ -111,11 +115,11 @@ export default function GitPage() {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <GitBranch className="w-6 h-6 text-blue-600" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+            <GitBranch className="w-7 h-7 text-blue-600 dark:text-blue-400" />
             Git Repository Integration
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
             Real live GitHub commits, branches, issues, and pull requests for our eYRC team
           </p>
         </div>
@@ -125,15 +129,15 @@ export default function GitPage() {
             <button
               onClick={fetchGit}
               title="Refresh live GitHub data"
-              className="p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2.5 rounded-xl text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-blue-600' : ''}`} />
             </button>
           )}
           {isAdmin && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all"
             >
               <Plus className="w-4 h-4" />
               {configured ? 'Add Another Repo' : 'Connect GitHub'}
@@ -144,7 +148,7 @@ export default function GitPage() {
 
       {loading ? (
         <div className="py-12 flex justify-center text-slate-400">
-          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : !configured || gitData.repositories?.length === 0 ? (
         <EmptyState
@@ -162,7 +166,7 @@ export default function GitPage() {
               key={repo.id}
               className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
                     <GitBranch className="w-5 h-5" />
@@ -170,7 +174,7 @@ export default function GitPage() {
                   <div>
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                       {repo.repositoryName}
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                         {repo.platform}
                       </span>
                     </h3>
@@ -178,7 +182,7 @@ export default function GitPage() {
                       href={repo.repositoryUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 mt-0.5"
+                      className="text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline flex items-center gap-1 mt-0.5"
                     >
                       {repo.repositoryUrl} <ExternalLink className="w-3 h-3" />
                     </a>
@@ -187,7 +191,7 @@ export default function GitPage() {
 
                 <div className="flex items-center gap-3">
                   {repoSummary && (
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <div className="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300 font-semibold font-mono">
                       <span className="flex items-center gap-1">
                         <Star className="w-3.5 h-3.5 text-amber-500" />
                         {repoSummary.stars}
@@ -217,10 +221,10 @@ export default function GitPage() {
 
               {/* GitHub API Live Status / Error Notice */}
               {liveError && (
-                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 flex items-start gap-2.5 text-xs text-amber-700 dark:text-amber-300">
+                <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 flex items-start gap-2.5 text-xs text-amber-800 dark:text-amber-300">
                   <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
                   <div>
-                    <p className="font-semibold">GitHub Live Notice</p>
+                    <p className="font-bold">GitHub Live Notice</p>
                     <p className="mt-0.5">{liveError}</p>
                   </div>
                 </div>
@@ -229,19 +233,19 @@ export default function GitPage() {
               {/* Live GitHub Data Tabs */}
               {live && (
                 <div>
-                  <div className="flex border-b border-slate-100 dark:border-slate-800 gap-2 mb-4">
+                  <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2 mb-4">
                     {(['commits', 'branches', 'issues', 'prs', 'contributors'] as const).map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`pb-2.5 px-3 text-xs font-semibold border-b-2 capitalize transition-colors ${
+                        className={`pb-2.5 px-3 text-xs font-bold border-b-2 capitalize transition-colors ${
                           activeTab === tab
                             ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                            : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                            : 'border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
                         }`}
                       >
                         {tab === 'prs' ? 'Pull Requests' : tab}
-                        <span className="ml-1.5 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold">
+                        <span className="ml-1.5 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold font-mono">
                           {tab === 'commits'
                             ? live.commits?.length || 0
                             : tab === 'branches'
@@ -265,18 +269,18 @@ export default function GitPage() {
                         live.commits.map((c: any, idx: number) => (
                           <div
                             key={idx}
-                            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
+                            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
                               <GitCommit className="w-4 h-4 text-blue-500 shrink-0" />
-                              <span className="font-mono text-[11px] font-bold text-slate-500 bg-slate-200/60 dark:bg-slate-700/60 px-1.5 py-0.5 rounded">
+                              <span className="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">
                                 {c.sha}
                               </span>
-                              <p className="text-slate-800 dark:text-slate-200 font-medium truncate">
+                              <p className="text-slate-900 dark:text-slate-100 font-bold truncate">
                                 {c.message}
                               </p>
                             </div>
-                            <div className="text-right shrink-0 ml-3 text-slate-400 text-[11px]">
+                            <div className="text-right shrink-0 ml-3 text-slate-600 dark:text-slate-400 text-[11px] font-medium font-mono">
                               <span>{c.author}</span> • {formatDate(c.date)}
                             </div>
                           </div>

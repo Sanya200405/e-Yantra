@@ -161,7 +161,6 @@ export default function SettingsPage() {
       toast.dismiss(toastId);
 
       if (res.ok) {
-        const data = await res.json();
         toast.success('Restore completed successfully ✓', 'Workspace data reverted to selected snapshot.');
         setRestoreModalOpen(false);
         fetchSettingsData();
@@ -339,10 +338,10 @@ export default function SettingsPage() {
         {isAdmin && (
           <button
             onClick={() => setActiveTab('system')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
               activeTab === 'system'
-                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold shadow-2xs'
-                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-2xs'
+                : 'text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -354,13 +353,13 @@ export default function SettingsPage() {
       {/* TAB 1: APPEARANCE & THEME */}
       {activeTab === 'appearance' && (
         <div className="space-y-6 animate-fade-in-up">
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <Sun className="w-4 h-4 text-amber-500" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <Sun className="w-5 h-5 text-amber-500" />
                 Color Theme & Interface Mode
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium mt-0.5">
                 Choose your preferred interface style. Theme transitions are smooth and automatically saved.
               </p>
             </div>
@@ -449,19 +448,19 @@ export default function SettingsPage() {
       {activeTab === 'data' && (
         <div className="space-y-6 animate-fade-in-up">
           {/* Cloud Database Status Card */}
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                 <Database className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   Cloud Database Storage
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                     PostgreSQL Online
                   </span>
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium mt-1">
                   All tasks, notes, meetings, and schedules are stored persistently in cloud PostgreSQL with automated backup support.
                 </p>
               </div>
@@ -471,7 +470,7 @@ export default function SettingsPage() {
               <button
                 onClick={handleBackupNow}
                 disabled={isBackingUp}
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors shrink-0 disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-neon-blue transition-all shrink-0 disabled:opacity-50"
               >
                 {isBackingUp ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Database className="w-3.5 h-3.5" />}
                 {isBackingUp ? 'Creating backup...' : 'Backup Now'}
@@ -480,13 +479,13 @@ export default function SettingsPage() {
           </div>
 
           {/* Data Export Formats Grid */}
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <Download className="w-4 h-4 text-blue-600" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <Download className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 Data Export & Portability
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium mt-0.5">
                 Download structured data anytime to migrate, share with mentors, or archive locally
               </p>
             </div>
@@ -495,11 +494,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=json"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileCode className="w-4 h-4 text-purple-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Full JSON Archive</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Full JSON Archive</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -507,11 +506,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=tasks"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Tasks (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Tasks (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -519,11 +518,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=hardware"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Hardware (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Hardware (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -531,11 +530,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=meetings"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Meetings (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Meetings (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -543,11 +542,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=classes"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Classes (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Classes (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -555,11 +554,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=notes"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Notes (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Notes (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -567,11 +566,11 @@ export default function SettingsPage() {
               <a
                 href="/api/export?format=csv&type=resources"
                 download
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
+                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-2.5">
                   <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Resources (CSV)</span>
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Resources (CSV)</span>
                 </div>
                 <Download className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
               </a>
@@ -579,14 +578,14 @@ export default function SettingsPage() {
           </div>
 
           {/* Backup History Table */}
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <RotateCcw className="w-4 h-4 text-blue-600" />
                   Backup History & Safe Restoration ({backups.length})
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium">
                   Versioned database snapshots stored securely in PostgreSQL
                 </p>
               </div>
@@ -599,14 +598,14 @@ export default function SettingsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 uppercase tracking-wider font-semibold text-[10px]">
+                  <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 uppercase tracking-wider font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                     <tr>
-                      <th className="p-3">Backup Date & Time</th>
-                      <th className="p-3">Type</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Records & Size</th>
-                      <th className="p-3">Created By</th>
-                      {isAdmin && <th className="p-3 text-right">Actions</th>}
+                      <th className="p-3.5">Backup Date & Time</th>
+                      <th className="p-3.5">Type</th>
+                      <th className="p-3.5">Status</th>
+                      <th className="p-3.5">Records & Size</th>
+                      <th className="p-3.5">Created By</th>
+                      {isAdmin && <th className="p-3.5 text-right">Actions</th>}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200 font-medium">
@@ -668,7 +667,7 @@ export default function SettingsPage() {
       {/* TAB 3: TEAM ROSTER & SECURITY */}
       {activeTab === 'team' && (
         <div className="space-y-6 animate-fade-in-up">
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -737,18 +736,18 @@ export default function SettingsPage() {
           </div>
 
           {/* Security & Authentication Card */}
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-3">
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
               <Lock className="w-4 h-4 text-emerald-600" />
               Authentication & Session Security
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600 dark:text-slate-300">
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                <span className="font-semibold text-slate-900 dark:text-slate-100 block mb-0.5">Password Encryption</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
+                <span className="font-bold text-slate-900 dark:text-slate-100 block mb-0.5">Password Encryption</span>
                 Bcrypt password hashing (10 salt rounds) stored securely in cloud database.
               </div>
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                <span className="font-semibold text-slate-900 dark:text-slate-100 block mb-0.5">Session Cookies</span>
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
+                <span className="font-bold text-slate-900 dark:text-slate-100 block mb-0.5">Session Cookies</span>
                 HTTP-only, SameSite secure JWT session tokens with server-side validation.
               </div>
             </div>
@@ -759,13 +758,13 @@ export default function SettingsPage() {
       {/* TAB 4: SYSTEM CONFIGURATION */}
       {activeTab === 'system' && isAdmin && (
         <div className="space-y-6 animate-fade-in-up">
-          <div className="interactive-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-6 shadow-xs space-y-4">
-            <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-4">
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <Compass className="w-4 h-4 text-blue-600" />
                 Competition & System Configuration
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium">
                 Update team metadata, official links, and GitHub API credentials
               </p>
             </div>
@@ -829,7 +828,7 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={savingSettings}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-neon-blue transition-all disabled:opacity-50"
                 >
                   {savingSettings ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                   Save Configuration

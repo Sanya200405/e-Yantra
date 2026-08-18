@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import {
   FileText,
   Plus,
@@ -16,7 +17,6 @@ import {
   Upload,
   AlertCircle,
   X,
-  CheckCircle2,
   FileCheck,
   ExternalLink,
 } from 'lucide-react';
@@ -26,6 +26,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function NotesPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const [notes, setNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -111,7 +112,6 @@ export default function NotesPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Client-side quick validation (50 MB)
     if (file.size > 50 * 1024 * 1024) {
       setUploadError(`This file is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Maximum allowed size is 50 MB.`);
       return;
@@ -142,6 +142,7 @@ export default function NotesPage() {
             { name: data.fileName, url: data.url, size: data.size, mimeType: data.mimeType },
           ]);
           setUploadProgress(100);
+          toast.success('File attached ✓', data.fileName);
         } else {
           setUploadError(data.error || 'Upload failed. Please try again.');
         }
@@ -189,6 +190,7 @@ export default function NotesPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
+        toast.success(editingNote ? 'Note updated ✓' : 'Note created ✓');
         fetchNotes();
       } else {
         const d = await res.json();
@@ -206,6 +208,7 @@ export default function NotesPage() {
     try {
       const res = await fetch(`/api/notes/${id}`, { method: 'DELETE' });
       if (res.ok) {
+        toast.success('Note deleted');
         fetchNotes();
       }
     } catch (err) {
@@ -266,10 +269,10 @@ export default function NotesPage() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 font-semibold'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                  : 'text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-slate-100 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700'
               }`}
             >
               {cat === 'ALL' ? 'All' : cat.replace('_', ' ')}
@@ -281,7 +284,7 @@ export default function NotesPage() {
       {/* Notes Grid */}
       {loading ? (
         <div className="py-12 flex justify-center text-slate-400">
-          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
       ) : filteredNotes.length === 0 ? (
         <EmptyState
@@ -306,7 +309,7 @@ export default function NotesPage() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                       {n.category.replace('_', ' ')}
                     </span>
 
@@ -480,7 +483,7 @@ export default function NotesPage() {
                 <div className="flex items-center justify-between text-xs font-bold text-blue-700 dark:text-blue-300">
                   <span className="flex items-center gap-1.5">
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    Uploading file to cloud storage...
+                    Uploading file to persistent storage...
                   </span>
                   <span>{uploadProgress}%</span>
                 </div>

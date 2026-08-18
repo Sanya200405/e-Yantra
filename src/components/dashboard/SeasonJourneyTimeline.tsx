@@ -3,13 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Calendar,
   CheckCircle2,
-  Clock,
-  Sparkles,
   Trophy,
   Flag,
-  Radio,
   ArrowRight,
 } from 'lucide-react';
 
@@ -70,13 +66,13 @@ export function SeasonJourneyTimeline({ competitionStage = 'Registration / Theme
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
               Competition Milestones
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 flex items-center gap-2">
             <span>e-Yantra Season Timeline</span>
-            <Flag className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <Flag className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </h2>
           <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">
             Chronological roadmap tracking your team&apos;s journey through all competition phases
@@ -87,14 +83,14 @@ export function SeasonJourneyTimeline({ competitionStage = 'Registration / Theme
           href="https://portal.e-yantra.org"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline inline-flex items-center gap-1 shrink-0"
+          className="text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline inline-flex items-center gap-1 shrink-0"
         >
           Official Schedule <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>
 
       {/* Vertical Animated Timeline Flow */}
-      <div className="relative pl-6 sm:pl-8 space-y-5 before:absolute before:left-3 sm:before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-linear-to-b before:from-blue-500 before:via-purple-500 before:to-amber-500">
+      <div className="relative pl-6 sm:pl-8 space-y-5 before:absolute before:left-3 sm:before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-linear-to-b before:from-blue-500 before:via-indigo-500 before:to-amber-500">
         {events.map((event, idx) => (
           <div key={idx} className="relative group">
             {/* Timeline Marker Beacon */}
@@ -103,7 +99,7 @@ export function SeasonJourneyTimeline({ competitionStage = 'Registration / Theme
                 event.isCompleted
                   ? 'bg-emerald-600 border-emerald-400 text-white shadow-xs'
                   : event.isActive
-                  ? 'bg-blue-600 border-blue-400 text-white shadow-neon-blue beacon-pulse'
+                  ? 'bg-blue-600 border-blue-400 text-white shadow-subtle-blue beacon-pulse'
                   : event.isFinale
                   ? 'bg-amber-400 border-amber-300 text-slate-900'
                   : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
@@ -141,9 +137,9 @@ export function SeasonJourneyTimeline({ competitionStage = 'Registration / Theme
                 <span
                   className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full ${
                     event.isCompleted
-                      ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/60 dark:text-emerald-300'
+                      ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300'
                       : event.isActive
-                      ? 'bg-blue-600 text-white animate-pulse'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
                   }`}
                 >

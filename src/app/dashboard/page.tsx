@@ -9,7 +9,7 @@ import { CurrentMissionSpotlight } from '@/components/dashboard/CurrentMissionSp
 import { TelemetryCounters } from '@/components/dashboard/TelemetryCounters';
 import { SeasonJourneyTimeline } from '@/components/dashboard/SeasonJourneyTimeline';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
-import { History, Activity, Sparkles, CheckCircle2 } from 'lucide-react';
+import { History, Activity } from 'lucide-react';
 import { formatDateTime } from '@/lib/utils';
 
 export default function DashboardPage() {
@@ -100,20 +100,20 @@ export default function DashboardPage() {
         {/* Real-time Team Activity Log (5 Cols) */}
         <div className="lg:col-span-5 tech-panel p-6 sm:p-7 flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   Audit Feed
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">TELEMETRY STREAM</span>
+              <span className="text-[10px] font-mono text-slate-500">TELEMETRY STREAM</span>
             </div>
 
             <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mt-2 flex items-center gap-2">
-              <History className="w-4 h-4 text-emerald-500" />
+              <History className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               Recent Team Activity
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Live audit trail of real workspace contributions and milestone completions
             </p>
           </div>
@@ -128,10 +128,10 @@ export default function DashboardPage() {
               {recentActivities.map((act: any) => (
                 <div
                   key={act.id}
-                  className="flex items-start justify-between p-3 rounded-xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 text-xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                  className="flex items-start justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
                 >
                   <div className="flex items-start gap-2.5 min-w-0">
-                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 font-mono">
+                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5 font-mono">
                       {act.userName?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div className="min-w-0">
