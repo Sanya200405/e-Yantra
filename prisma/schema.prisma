@@ -291,7 +291,8 @@ model UploadedFile {
   url          String
   size         Int
   mimeType     String
-  provider     String    @default("VERCEL_BLOB") // "VERCEL_BLOB" | "LOCAL"
+  dataBase64   String?   // Base64 storage payload for instant zero-config database persistence
+  provider     String    @default("VERCEL_BLOB") // "VERCEL_BLOB" | "DATABASE" | "LOCAL"
   category     String?   @default("GENERAL") // "RESOURCE" | "NOTE" | "GENERAL"
   
   uploadedById String?

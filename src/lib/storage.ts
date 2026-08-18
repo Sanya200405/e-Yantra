@@ -32,19 +32,18 @@ export const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   'text/markdown': ['.md'],
   'application/json': ['.json'],
   
-  // Archives
+  // Archives & Firmware
   'application/zip': ['.zip'],
   'application/x-zip-compressed': ['.zip'],
   'application/x-tar': ['.tar'],
   'application/gzip': ['.gz', '.tar.gz'],
-  'application/octet-stream': ['.bin', '.hex', '.elf', '.pdf', '.zip'], // For microcontroller binaries/firmware & fallback
+  'application/octet-stream': ['.bin', '.hex', '.elf', '.pdf', '.zip'],
 };
 
-// Check if a file is supported based on MIME type and filename extension
 export function validateFileType(mimeType: string, filename: string): { valid: boolean; reason?: string } {
   const ext = path.extname(filename).toLowerCase();
   
-  // Block explicitly dangerous executable extensions regardless of MIME
+  // Block dangerous executable extensions
   const dangerousExtensions = ['.exe', '.bat', '.cmd', '.sh', '.vbs', '.js', '.ts', '.jsx', '.tsx', '.php', '.phtml', '.py', '.rb', '.pl', '.jar', '.msi', '.scr', '.com'];
   if (dangerousExtensions.includes(ext)) {
     return {
@@ -55,15 +54,11 @@ export function validateFileType(mimeType: string, filename: string): { valid: b
 
   // Check MIME whitelist
   const allowedExts = ALLOWED_MIME_TYPES[mimeType.toLowerCase()];
-  if (allowedExts) {
-    return { valid: true };
-  }
+  if (allowedExts) return { valid: true };
 
-  // Fallback: Check extension whitelist if MIME type is generic
+  // Fallback extension check
   const allAllowedExtensions = Object.values(ALLOWED_MIME_TYPES).flat();
-  if (allAllowedExtensions.includes(ext)) {
-    return { valid: true };
-  }
+  if (allAllowedExtensions.includes(ext)) return { valid: true };
 
   return {
     valid: false,
@@ -71,13 +66,9 @@ export function validateFileType(mimeType: string, filename: string): { valid: b
   };
 }
 
-// Sanitize filename to prevent path traversal and weird character injection
 export function sanitizeFilename(originalName: string): string {
-  // Strip path traversal sequences
   const baseName = path.basename(originalName);
-  // Replace non-alphanumeric (except dot, hyphen, underscore) with underscore
   const safeName = baseName.replace(/[^a-zA-Z0-9._-]/g, '_');
-  // Trim leading/trailing dots/underscores
   const clean = safeName.replace(/^[._-]+|[._-]+$/g, '');
   return clean || 'document';
 }
@@ -89,14 +80,14 @@ export interface UploadResult {
   fileName: string;
   size: number;
   mimeType: string;
-  provider: 'VERCEL_BLOB' | 'LOCAL';
+  provider: 'VERCEL_BLOB' | 'DATABASE' | 'LOCAL';
   category?: string;
   uploadedBy?: string;
   createdAt: Date;
 }
 
 /**
- * Upload a file to Cloud Storage (Vercel Blob) or local storage with PostgreSQL metadata tracking.
+ * Upload a file to Cloud Storage (Vercel Blob) or Database Blob storage with PostgreSQL metadata tracking.
  */
 export async function uploadToStorage(
   file: File,
@@ -108,7 +99,7 @@ export async function uploadToStorage(
 ): Promise<UploadResult> {
   const { userId, userName, category = 'GENERAL' } = options;
 
-  // 1. File Size Validation
+  // 1. Size Validation
   if (file.size > MAX_FILE_SIZE_BYTES) {
     throw new Error(`This file is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Maximum allowed size is ${MAX_FILE_SIZE_MB} MB.`);
   }
@@ -117,7 +108,7 @@ export async function uploadToStorage(
     throw new Error('The selected file is empty.');
   }
 
-  // 2. File Type & MIME Validation
+  // 2. Type Validation
   const validation = validateFileType(file.type || 'application/octet-stream', file.name);
   if (!validation.valid) {
     throw new Error(validation.reason || 'Unsupported file type.');
@@ -127,14 +118,11 @@ export async function uploadToStorage(
   const uniquePrefix = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
   const storagePath = `yantrahub/${category.toLowerCase()}/${uniquePrefix}_${cleanName}`;
 
-  let uploadedUrl: string = '';
-  let storageKey: string = storagePath;
-  let provider: 'VERCEL_BLOB' | 'LOCAL' = 'VERCEL_BLOB';
-
-  const isVercelEnvironment = process.env.VERCEL === '1';
   const hasBlobToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
 
-  // 3. Upload to Cloud Storage (Vercel Blob)
+  // 3. Cloud Object Storage (Vercel Blob) if token exists
   if (hasBlobToken) {
     try {
       const blob = await put(storagePath, file, {
@@ -143,81 +131,73 @@ export async function uploadToStorage(
         addRandomSuffix: false,
       });
 
-      uploadedUrl = blob.url;
-      storageKey = blob.pathname || storagePath;
-      provider = 'VERCEL_BLOB';
-    } catch (blobError: any) {
-      console.error('Vercel Blob upload failed:', blobError);
-      throw new Error(`Cloud storage upload failed: ${blobError.message || 'Storage service error'}`);
-    }
-  } else if (!isVercelEnvironment) {
-    // Local development fallback (writes to public/uploads on developer workstation)
-    try {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-      
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-      }
+      const fileRecord = await prisma.uploadedFile.create({
+        data: {
+          filename: file.name,
+          storageKey: blob.pathname || storagePath,
+          url: blob.url,
+          size: file.size,
+          mimeType: file.type || 'application/octet-stream',
+          provider: 'VERCEL_BLOB',
+          category: category,
+          uploadedById: userId || null,
+        },
+      });
 
-      const localFileName = `${uniquePrefix}_${cleanName}`;
-      const localFilePath = path.join(uploadsDir, localFileName);
-      fs.writeFileSync(localFilePath, buffer);
-
-      uploadedUrl = `/uploads/${localFileName}`;
-      storageKey = localFileName;
-      provider = 'LOCAL';
-    } catch (localError: any) {
-      console.error('Local file write failed:', localError);
-      throw new Error(`Local file storage failed: ${localError.message}`);
-    }
-  } else {
-    // On Vercel but BLOB_READ_WRITE_TOKEN is missing
-    throw new Error(
-      'Vercel Blob Storage is not configured. Please add a Blob store in your Vercel Project Settings to enable persistent file uploads.'
-    );
-  }
-
-  // 4. Record metadata in PostgreSQL via Prisma
-  try {
-    const fileRecord = await prisma.uploadedFile.create({
-      data: {
-        filename: file.name,
-        storageKey: storageKey,
-        url: uploadedUrl,
-        size: file.size,
-        mimeType: file.type || 'application/octet-stream',
-        provider: provider,
+      return {
+        id: fileRecord.id,
+        url: fileRecord.url,
+        storageKey: fileRecord.storageKey,
+        fileName: fileRecord.filename,
+        size: fileRecord.size,
+        mimeType: fileRecord.mimeType,
+        provider: 'VERCEL_BLOB',
         category: category,
-        uploadedById: userId || null,
-      },
-    });
-
-    return {
-      id: fileRecord.id,
-      url: fileRecord.url,
-      storageKey: fileRecord.storageKey,
-      fileName: fileRecord.filename,
-      size: fileRecord.size,
-      mimeType: fileRecord.mimeType,
-      provider: provider,
-      category: category,
-      uploadedBy: userName,
-      createdAt: fileRecord.createdAt,
-    };
-  } catch (dbError: any) {
-    console.error('Database write failed for uploaded file, cleaning up cloud storage:', dbError);
-    // Cleanup orphaned cloud object
-    if (provider === 'VERCEL_BLOB' && uploadedUrl) {
-      try {
-        await del(uploadedUrl);
-      } catch (cleanupError) {
-        console.error('Failed to cleanup orphaned blob:', cleanupError);
-      }
+        uploadedBy: userName,
+        createdAt: fileRecord.createdAt,
+      };
+    } catch (blobError: any) {
+      console.error('Vercel Blob upload failed, falling back to database storage:', blobError);
     }
-    throw new Error('Failed to record file metadata in the database.');
   }
+
+  // 4. Instant Zero-Config Database Storage Fallback (Always works on Vercel and local)
+  const base64Data = buffer.toString('base64');
+  const tempId = `file_${uniquePrefix}`;
+
+  const fileRecord = await prisma.uploadedFile.create({
+    data: {
+      filename: file.name,
+      storageKey: storagePath,
+      url: `/api/upload/${tempId}`, // Will be updated with actual ID
+      size: file.size,
+      mimeType: file.type || 'application/octet-stream',
+      dataBase64: base64Data,
+      provider: 'DATABASE',
+      category: category,
+      uploadedById: userId || null,
+    },
+  });
+
+  // Update URL to point to its permanent retrieval endpoint
+  const permanentUrl = `/api/upload/${fileRecord.id}`;
+  await prisma.uploadedFile.update({
+    where: { id: fileRecord.id },
+    data: { url: permanentUrl },
+  });
+
+  return {
+    id: fileRecord.id,
+    url: permanentUrl,
+    storageKey: fileRecord.storageKey,
+    fileName: fileRecord.filename,
+    size: fileRecord.size,
+    mimeType: fileRecord.mimeType,
+    provider: 'DATABASE',
+    category: category,
+    uploadedBy: userName,
+    createdAt: fileRecord.createdAt,
+  };
 }
 
 /**
@@ -228,7 +208,6 @@ export async function deleteFromStorage(
   requestingUserId?: string,
   userRole?: string
 ): Promise<{ success: boolean; message: string }> {
-  // Find record in Prisma
   let fileRecord = null;
   if (identifier.id) {
     fileRecord = await prisma.uploadedFile.findUnique({ where: { id: identifier.id } });
@@ -238,7 +217,7 @@ export async function deleteFromStorage(
     fileRecord = await prisma.uploadedFile.findFirst({ where: { url: identifier.url } });
   }
 
-  // Authorization check: only uploader or ADMIN can delete
+  // Authorization check
   if (fileRecord && requestingUserId && userRole !== 'ADMIN') {
     if (fileRecord.uploadedById && fileRecord.uploadedById !== requestingUserId) {
       throw new Error('UNAUTHORIZED_DELETE: You do not have permission to delete this file.');
@@ -248,31 +227,19 @@ export async function deleteFromStorage(
   const targetUrl = fileRecord?.url || identifier.url;
   const isBlobUrl = targetUrl?.includes('public.blob.vercel-storage.com') || targetUrl?.startsWith('https://');
 
-  // 1. Delete from Cloud Storage
   if (isBlobUrl && targetUrl) {
     try {
       await del(targetUrl);
     } catch (delError) {
       console.warn('Vercel blob deletion warning:', delError);
     }
-  } else if (fileRecord?.provider === 'LOCAL' || targetUrl?.startsWith('/uploads/')) {
-    try {
-      const filename = path.basename(targetUrl || '');
-      const localFilePath = path.join(process.cwd(), 'public', 'uploads', filename);
-      if (fs.existsSync(localFilePath)) {
-        fs.unlinkSync(localFilePath);
-      }
-    } catch (localDelError) {
-      console.warn('Local file deletion warning:', localDelError);
-    }
   }
 
-  // 2. Delete from PostgreSQL
   if (fileRecord) {
     await prisma.uploadedFile.delete({
       where: { id: fileRecord.id },
     });
   }
 
-  return { success: true, message: 'File successfully deleted from storage and database.' };
+  return { success: true, message: 'File successfully deleted.' };
 }
