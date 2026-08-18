@@ -316,27 +316,27 @@ export default function ResourcesPage() {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">
                   {r.title}
                 </h3>
 
                 {r.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 line-clamp-2 font-medium">
                     {r.description}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   {r.url ? (
                     <a
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[200px]"
+                      className="inline-flex items-center gap-1.5 font-bold text-blue-700 dark:text-blue-400 hover:underline truncate max-w-[200px]"
                     >
-                      <ExternalLink className="w-3 h-3 shrink-0" />
+                      <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                       Open Resource
                     </a>
                   ) : r.fileUrl ? (
@@ -344,18 +344,18 @@ export default function ResourcesPage() {
                       href={r.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+                      className="inline-flex items-center gap-1.5 font-bold text-purple-700 dark:text-purple-400 hover:underline"
                     >
-                      <FileText className="w-3 h-3" />
+                      <FileText className="w-3.5 h-3.5" />
                       View Uploaded Document
                     </a>
                   ) : (
-                    <span className="text-[11px] text-slate-400">No link</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">No link</span>
                   )}
 
                   {r.addedBy && (
-                    <span className="text-[10px] text-slate-400 flex items-center gap-1 shrink-0">
-                      <User className="w-3 h-3" />
+                    <span className="text-xs text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-1 shrink-0">
+                      <User className="w-3.5 h-3.5 text-slate-500" />
                       {r.addedBy.name}
                     </span>
                   )}

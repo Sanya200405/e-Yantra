@@ -286,24 +286,24 @@ export default function NotesPage() {
                     </div>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-2">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-2">
                     {n.title}
                   </h3>
 
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 font-mono text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap line-clamp-6 mb-3">
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 font-mono text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap line-clamp-6 mb-3">
                     {n.content}
                   </div>
 
                   {n.tags && (
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-3">
-                      <Tag className="w-3 h-3" />
-                      <span className="text-[11px]">{n.tags}</span>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 mb-3 font-semibold">
+                      <Tag className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-xs">{n.tags}</span>
                     </div>
                   )}
 
                   {fileList.length > 0 && (
                     <div className="space-y-1 mb-3">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider block">
                         Attachments:
                       </span>
                       {fileList.map((f: any, idx: number) => (
@@ -312,9 +312,9 @@ export default function NotesPage() {
                           href={f.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline bg-blue-50/50 dark:bg-blue-950/20 px-2 py-0.5 rounded mr-2 mb-1"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 px-2.5 py-1 rounded-lg mr-2 mb-1"
                         >
-                          <Paperclip className="w-3 h-3" />
+                          <Paperclip className="w-3.5 h-3.5" />
                           <span className="truncate max-w-[150px]">{f.name}</span>
                         </a>
                       ))}
@@ -322,13 +322,13 @@ export default function NotesPage() {
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-700 dark:text-slate-300 font-semibold">
                   <span className="flex items-center gap-1">
-                    <User className="w-3 h-3" />
+                    <User className="w-3.5 h-3.5 text-slate-500" />
                     {n.author?.name || 'Team Member'}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
+                  <span className="flex items-center gap-1 font-mono">
+                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
                     {formatDate(n.updatedAt)}
                   </span>
                 </div>

@@ -277,26 +277,26 @@ export default function LecturesPage() {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">
                   {l.title}
                 </h3>
 
                 {l.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 line-clamp-2 font-medium">
                     {l.description}
                   </p>
                 )}
 
                 {l.date && (
-                  <p className="text-[11px] text-slate-400 flex items-center gap-1 mb-3">
-                    <Clock className="w-3 h-3" />
+                  <p className="text-xs text-slate-700 dark:text-slate-300 flex items-center gap-1.5 mb-3 font-semibold font-mono">
+                    <Clock className="w-3.5 h-3.5 text-slate-500" />
                     Date: {formatDate(l.date)}
                   </p>
                 )}
 
                 {l.notes && (
-                  <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 mb-3 text-xs text-slate-600 dark:text-slate-300">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 mb-3 text-xs text-slate-800 dark:text-slate-200 font-medium">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider block mb-1">
                       Notes / Summary
                     </span>
                     {l.notes}
@@ -304,7 +304,7 @@ export default function LecturesPage() {
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
                 {/* Links Row */}
                 <div className="flex flex-wrap items-center gap-2">
                   {l.lectureLink && (
@@ -312,9 +312,9 @@ export default function LecturesPage() {
                       href={l.lectureLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline"
                     >
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-3.5 h-3.5" />
                       Session Link
                     </a>
                   )}

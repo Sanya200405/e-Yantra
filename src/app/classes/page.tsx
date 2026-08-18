@@ -253,24 +253,24 @@ export default function ClassesPage() {
                   )}
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">
                   {c.title}
                 </h3>
 
                 {c.instructor && (
-                  <p className="text-xs text-slate-500 flex items-center gap-1.5 mb-2">
-                    <User className="w-3.5 h-3.5" />
+                  <p className="text-xs text-slate-800 dark:text-slate-200 font-semibold flex items-center gap-1.5 mb-2">
+                    <User className="w-3.5 h-3.5 text-slate-500" />
                     Instructor: {c.instructor}
                   </p>
                 )}
 
-                <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 mb-3">
-                  <span className="flex items-center gap-1 font-medium">
-                    <CalendarIcon className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex items-center gap-3 text-xs text-slate-800 dark:text-slate-200 mb-3 font-semibold">
+                  <span className="flex items-center gap-1 font-bold">
+                    <CalendarIcon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     {formatDate(c.date)}
                   </span>
                   {(c.startTime || c.endTime) && (
-                    <span className="flex items-center gap-1 text-slate-500">
+                    <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-medium font-mono">
                       <Clock className="w-3.5 h-3.5" />
                       {c.startTime} {c.endTime && `- ${c.endTime}`}
                     </span>
@@ -278,28 +278,28 @@ export default function ClassesPage() {
                 </div>
 
                 {c.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 line-clamp-2 font-medium">
                     {c.description}
                   </p>
                 )}
 
                 {c.notes && (
-                  <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 mb-3">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 mb-3">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider block mb-1">
                       Notes
                     </span>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">{c.notes}</p>
+                    <p className="text-xs text-slate-800 dark:text-slate-200 font-medium">{c.notes}</p>
                   </div>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
                 {c.meetingLink && (
                   <a
                     href={c.meetingLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800 dark:text-blue-400"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     Join Live Session
@@ -310,7 +310,7 @@ export default function ClassesPage() {
                     href={c.recordingLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 ml-auto"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 hover:text-purple-800 dark:text-purple-400 ml-auto"
                   >
                     <Video className="w-3.5 h-3.5" />
                     Recording

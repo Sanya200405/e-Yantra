@@ -245,57 +245,57 @@ export default function ThemesPage() {
               </div>
 
               {/* Official Information Box */}
-              <div className="p-3 rounded-xl bg-orange-50/50 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/30 text-xs">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-700 dark:text-orange-400 flex items-center gap-1">
-                    <Shield className="w-3 h-3" /> Official e-Yantra Theme Info
+              <div className="p-4 rounded-2xl bg-orange-50/70 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/40 text-xs sm:text-sm">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-900 dark:text-orange-300 flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" /> Official e-Yantra Theme Info
                   </span>
                   {th.officialLink && (
                     <a
                       href={th.officialLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] font-semibold text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-0.5"
+                      className="text-xs font-bold text-orange-700 dark:text-orange-400 hover:underline flex items-center gap-1"
                     >
-                      Portal Link <ExternalLink className="w-2.5 h-2.5" />
+                      Portal Link <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
-                <p className="text-slate-700 dark:text-slate-300">
+                <p className="text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
                   {th.description || 'No official description entered yet.'}
                 </p>
               </div>
 
               {/* Team Notes & Assessment Box */}
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
-                  <FileText className="w-3 h-3" /> Our Team Evaluation & Strategy
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm space-y-2.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Our Team Evaluation & Strategy
                 </span>
 
                 {th.technologies && (
                   <div>
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       Technologies Involved:{' '}
                     </span>
-                    <span className="text-slate-700 dark:text-slate-300">{th.technologies}</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{th.technologies}</span>
                   </div>
                 )}
 
                 {th.difficultyNotes && (
                   <div>
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       Difficulty & Feasibility:{' '}
                     </span>
-                    <span className="text-slate-700 dark:text-slate-300">{th.difficultyNotes}</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{th.difficultyNotes}</span>
                   </div>
                 )}
 
                 {th.notes && (
                   <div>
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
                       Team Strategy Notes:{' '}
                     </span>
-                    <span className="text-slate-700 dark:text-slate-300">{th.notes}</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{th.notes}</span>
                   </div>
                 )}
               </div>

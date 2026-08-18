@@ -232,12 +232,12 @@ export default function TechStackPage() {
                     {item.technology}
                   </h3>
                   <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
+                    className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-md border ${
                       item.status === 'COMPLETED'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300'
+                        ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                         : item.status === 'USING'
-                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'
-                        : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
+                        ? 'bg-blue-100 text-blue-900 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                        : 'bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                     }`}
                   >
                     {item.status}
@@ -245,21 +245,21 @@ export default function TechStackPage() {
                 </div>
 
                 {item.notes && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 font-medium leading-relaxed">
                     {item.notes}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-3 text-xs">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-3 text-xs">
                 {item.documentationLink && (
                   <a
                     href={item.documentationLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                    className="inline-flex items-center gap-1.5 font-bold text-blue-700 dark:text-blue-400 hover:underline"
                   >
-                    <BookOpen className="w-3 h-3" />
+                    <BookOpen className="w-3.5 h-3.5" />
                     Documentation
                   </a>
                 )}
@@ -268,9 +268,9 @@ export default function TechStackPage() {
                     href={item.learningResource}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+                    className="inline-flex items-center gap-1.5 font-bold text-purple-700 dark:text-purple-400 hover:underline"
                   >
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                     Learning Guide
                   </a>
                 )}

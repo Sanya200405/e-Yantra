@@ -169,66 +169,67 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Quick Create"
-      subtitle="Rapidly add items to your e-Yantra workspace"
+      title="Quick Workspace Action"
+      subtitle="Instantly log a task, meeting, note, or reference resource"
     >
-      <div className="flex border-b border-slate-100 dark:border-slate-800 mb-5 gap-2">
+      {/* Action Tabs */}
+      <div className="flex border-b border-slate-200 dark:border-slate-800 mb-5 gap-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('task')}
-          className={`flex items-center gap-1.5 pb-2.5 px-2 text-xs font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
             activeTab === 'task'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-blue-600 text-blue-700 dark:text-blue-400'
+              : 'border-transparent text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <CheckSquare className="w-3.5 h-3.5" />
+          <CheckSquare className="w-4 h-4" />
           Task
         </button>
         <button
           onClick={() => setActiveTab('meeting')}
-          className={`flex items-center gap-1.5 pb-2.5 px-2 text-xs font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
             activeTab === 'meeting'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-blue-600 text-blue-700 dark:text-blue-400'
+              : 'border-transparent text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <Calendar className="w-3.5 h-3.5" />
+          <Calendar className="w-4 h-4" />
           Meeting
         </button>
         <button
           onClick={() => setActiveTab('note')}
-          className={`flex items-center gap-1.5 pb-2.5 px-2 text-xs font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
             activeTab === 'note'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-blue-600 text-blue-700 dark:text-blue-400'
+              : 'border-transparent text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <FileText className="w-3.5 h-3.5" />
+          <FileText className="w-4 h-4" />
           Note
         </button>
         <button
           onClick={() => setActiveTab('resource')}
-          className={`flex items-center gap-1.5 pb-2.5 px-2 text-xs font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-1.5 pb-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
             activeTab === 'resource'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-blue-600 text-blue-700 dark:text-blue-400'
+              : 'border-transparent text-slate-700 hover:text-slate-950 dark:text-slate-400 dark:hover:text-slate-200'
           }`}
         >
-          <Bookmark className="w-3.5 h-3.5" />
+          <Bookmark className="w-4 h-4" />
           Resource
         </button>
       </div>
 
       {error && (
-        <div className="mb-4 p-2.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs">
+        <div className="mb-4 p-3 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-900 dark:text-red-300 border border-red-200 dark:border-red-800 text-xs font-semibold">
           {error}
         </div>
       )}
 
       {activeTab === 'task' && (
-        <form onSubmit={handleCreateTask} className="space-y-3.5">
+        <form onSubmit={handleCreateTask} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
               Task Title *
             </label>
             <input
@@ -237,18 +238,18 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               placeholder="e.g. Implement PID velocity control"
-              className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Priority
               </label>
               <select
                 value={taskPriority}
                 onChange={(e) => setTaskPriority(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -257,43 +258,43 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Category
               </label>
               <input
                 type="text"
                 value={taskCategory}
                 onChange={(e) => setTaskCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Due Date
               </label>
               <input
                 type="date"
                 value={taskDueDate}
                 onChange={(e) => setTaskDueDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
               />
             </div>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-neon-blue disabled:opacity-50"
           >
-            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Create Task
           </button>
         </form>
       )}
 
       {activeTab === 'meeting' && (
-        <form onSubmit={handleScheduleMeeting} className="space-y-3.5">
+        <form onSubmit={handleScheduleMeeting} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
               Meeting Title *
             </label>
             <input
@@ -302,12 +303,12 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               value={meetingTitle}
               onChange={(e) => setMeetingTitle(e.target.value)}
               placeholder="e.g. Weekly Progress Sync"
-              className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Date *
               </label>
               <input
@@ -315,11 +316,11 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
                 required
                 value={meetingDate}
                 onChange={(e) => setMeetingDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Time
               </label>
               <input
@@ -327,12 +328,12 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
                 value={meetingTime}
                 onChange={(e) => setMeetingTime(e.target.value)}
                 placeholder="e.g. 05:00 PM"
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
               Meeting Link (Google Meet / Zoom)
             </label>
             <input
@@ -340,25 +341,25 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               value={meetingLink}
               onChange={(e) => setMeetingLink(e.target.value)}
               placeholder="https://meet.google.com/..."
-              className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-neon-blue disabled:opacity-50"
           >
-            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Schedule Meeting
           </button>
         </form>
       )}
 
       {activeTab === 'note' && (
-        <form onSubmit={handleCreateNote} className="space-y-3.5">
+        <form onSubmit={handleCreateNote} className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Title *
               </label>
               <input
@@ -367,17 +368,17 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
                 placeholder="Note title"
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Category
               </label>
               <select
                 value={noteCategory}
                 onChange={(e) => setNoteCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
               >
                 <option value="ROBOTICS">Robotics</option>
                 <option value="ROS">ROS</option>
@@ -392,7 +393,7 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
               Content (Markdown) *
             </label>
             <textarea
@@ -401,24 +402,24 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               placeholder="Write Markdown notes here..."
-              className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 font-mono"
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-mono"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-neon-blue disabled:opacity-50"
           >
-            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Save Note
           </button>
         </form>
       )}
 
       {activeTab === 'resource' && (
-        <form onSubmit={handleAddResource} className="space-y-3.5">
+        <form onSubmit={handleAddResource} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
               Resource Title *
             </label>
             <input
@@ -427,12 +428,12 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               value={resourceTitle}
               onChange={(e) => setResourceTitle(e.target.value)}
               placeholder="e.g. Official ROS 2 Humble Documentation"
-              className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
             />
           </div>
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 URL *
               </label>
               <input
@@ -441,17 +442,17 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
                 value={resourceUrl}
                 onChange={(e) => setResourceUrl(e.target.value)}
                 placeholder="https://..."
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
                 Category
               </label>
               <select
                 value={resourceCategory}
                 onChange={(e) => setResourceCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700"
+                className="w-full px-3 py-2 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
               >
                 <option value="DOCUMENTATION">Documentation</option>
                 <option value="WEBSITE">Website</option>
@@ -468,9 +469,9 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-neon-blue disabled:opacity-50"
           >
-            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Save Resource
           </button>
         </form>

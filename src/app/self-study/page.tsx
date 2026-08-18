@@ -263,32 +263,32 @@ export default function SelfStudyPage() {
                   </div>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-1">
                   {t.topic}
                 </h3>
 
                 {t.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-3 line-clamp-2 font-medium">
                     {t.description}
                   </p>
                 )}
 
-                <div className="flex items-center gap-3 text-xs text-slate-500 mb-3">
-                  <span className="flex items-center gap-1">
-                    <User className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex items-center gap-3 text-xs text-slate-800 dark:text-slate-200 mb-3 font-semibold">
+                  <span className="flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-slate-500" />
                     {t.assignedTo?.name || 'Unassigned'}
                   </span>
                   {t.targetDate && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="flex items-center gap-1.5 font-mono">
+                      <Calendar className="w-3.5 h-3.5 text-slate-500" />
                       Target: {formatDate(t.targetDate)}
                     </span>
                   )}
                 </div>
 
                 {t.notes && (
-                  <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 mb-3 text-xs text-slate-600 dark:text-slate-300">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 mb-3 text-xs text-slate-800 dark:text-slate-200 font-medium">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider block mb-1">
                       Personal Notes
                     </span>
                     {t.notes}
@@ -296,15 +296,15 @@ export default function SelfStudyPage() {
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
                 {t.resourceLink && (
                   <a
                     href={t.resourceLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline mb-1"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline mb-1"
                   >
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                     Study Resource Link
                   </a>
                 )}

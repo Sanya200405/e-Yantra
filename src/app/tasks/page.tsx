@@ -508,36 +508,36 @@ export default function TasksPage() {
         </div>
       ) : (
         /* LIST VIEW */
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-500 uppercase tracking-wider font-semibold text-[10px]">
+              <thead className="bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 uppercase tracking-wider font-bold text-[11px]">
                 <tr>
-                  <th className="p-3.5">Task</th>
-                  <th className="p-3.5">Status</th>
-                  <th className="p-3.5">Priority</th>
-                  <th className="p-3.5">Category</th>
-                  <th className="p-3.5">Assignee</th>
-                  <th className="p-3.5">Due Date</th>
-                  <th className="p-3.5 text-right">Actions</th>
+                  <th className="p-4">Task</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4">Priority</th>
+                  <th className="p-4">Category</th>
+                  <th className="p-4">Assignee</th>
+                  <th className="p-4">Due Date</th>
+                  <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200 font-medium">
                 {filteredTasks.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                    <td className="p-3.5 font-medium text-slate-900 dark:text-slate-100">
+                  <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <td className="p-4 font-bold text-slate-900 dark:text-slate-100">
                       <div>
-                        <p>{t.title}</p>
+                        <p className="text-xs sm:text-sm">{t.title}</p>
                         {t.description && (
-                          <p className="text-[11px] text-slate-400 line-clamp-1">{t.description}</p>
+                          <p className="text-xs text-slate-700 dark:text-slate-300 font-normal line-clamp-1 mt-0.5">{t.description}</p>
                         )}
                       </div>
                     </td>
-                    <td className="p-3.5">
+                    <td className="p-4">
                       <select
                         value={t.status}
                         onChange={(e) => handleStatusChange(t.id, e.target.value)}
-                        className="text-[11px] font-semibold py-0.5 px-2 rounded-lg bg-slate-100 dark:bg-slate-800 border-0 text-slate-700 dark:text-slate-300"
+                        className="text-xs font-bold py-1 px-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
                       >
                         <option value="NOT_STARTED">Not Started</option>
                         <option value="IN_PROGRESS">In Progress</option>
@@ -545,27 +545,27 @@ export default function TasksPage() {
                         <option value="COMPLETED">Completed</option>
                       </select>
                     </td>
-                    <td className="p-3.5">
-                      <span className="text-[10px] font-bold uppercase">{t.priority}</span>
+                    <td className="p-4">
+                      <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700">{t.priority}</span>
                     </td>
-                    <td className="p-3.5 text-slate-500">{t.category}</td>
-                    <td className="p-3.5">{t.assignedTo?.name || 'Unassigned'}</td>
-                    <td className="p-3.5">
+                    <td className="p-4 text-slate-700 dark:text-slate-300 font-semibold">{t.category}</td>
+                    <td className="p-4 text-slate-800 dark:text-slate-200 font-semibold">{t.assignedTo?.name || 'Unassigned'}</td>
+                    <td className="p-4 font-mono font-semibold text-slate-700 dark:text-slate-300">
                       {t.dueDate ? formatDate(t.dueDate) : '-'}
                     </td>
-                    <td className="p-3.5 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => openEditModal(t)}
-                          className="p-1 text-slate-400 hover:text-blue-600"
+                          className="p-1.5 text-slate-600 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(t.id)}
-                          className="p-1 text-slate-400 hover:text-red-600"
+                          className="p-1.5 text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>

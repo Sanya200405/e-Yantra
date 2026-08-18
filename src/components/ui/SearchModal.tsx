@@ -63,23 +63,23 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-150">
       <div className="fixed inset-0" onClick={onClose} />
       <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-10">
-        <div className="flex items-center px-4 py-3.5 border-b border-slate-100 dark:border-slate-800">
-          <Search className="w-5 h-5 text-slate-400 mr-3" />
+        <div className="flex items-center px-4 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900">
+          <Search className="w-5 h-5 text-slate-500 mr-3" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search tasks, notes, meetings, lectures, hardware, tech..."
-            className="flex-1 bg-transparent border-0 outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400"
+            className="flex-1 bg-transparent border-0 outline-none text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 font-medium"
           />
-          {loading && <Loader2 className="w-4 h-4 text-blue-500 animate-spin mr-2" />}
+          {loading && <Loader2 className="w-4 h-4 text-blue-600 animate-spin mr-2" />}
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -87,13 +87,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
         <div className="max-h-96 overflow-y-auto p-2">
           {query.length >= 2 && results.length === 0 && !loading && (
-            <div className="py-10 text-center text-xs text-slate-500">
+            <div className="py-10 text-center text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">
               No results found for &ldquo;{query}&rdquo;
             </div>
           )}
 
           {query.length < 2 && (
-            <div className="py-6 px-4 text-xs text-slate-400 text-center">
+            <div className="py-6 px-4 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 text-center">
               Type at least 2 characters to search across all team data
             </div>
           )}
@@ -102,29 +102,29 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             <button
               key={idx}
               onClick={() => handleSelect(item.url)}
-              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors text-left group"
+              className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors text-left group"
             >
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                  <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                     {item.type}
                   </span>
-                  <span className="text-sm font-medium text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {item.title}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 pl-0.5">
+                <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 pl-0.5 font-medium">
                   {item.subtitle}
                 </p>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
             </button>
           ))}
         </div>
 
-        <div className="px-4 py-2 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+        <div className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
           <span>Search e-Yantra Workspace</span>
-          <span>ESC to close</span>
+          <span className="font-mono">ESC to close</span>
         </div>
       </div>
     </div>

@@ -306,49 +306,49 @@ export default function HardwarePage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-slate-500 mb-3">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <div className="flex items-center gap-4 text-xs text-slate-800 dark:text-slate-200 mb-3 font-semibold">
+                  <span className="font-bold text-slate-900 dark:text-slate-100">
                     Qty: {item.quantity}
                   </span>
                   {item.location && (
                     <span className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-400" />
+                      <MapPin className="w-3.5 h-3.5 text-slate-500" />
                       {item.location}
                     </span>
                   )}
                 </div>
 
                 {item.purchaseInfo && (
-                  <p className="text-[11px] text-slate-400 mb-2">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 mb-2 font-medium">
                     Source: {item.purchaseInfo}
                   </p>
                 )}
 
                 {item.notes && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 mb-3 line-clamp-2 font-medium">
                     {item.notes}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-semibold">
                 {item.datasheetUrl ? (
                   <a
                     href={item.datasheetUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                    className="inline-flex items-center gap-1.5 font-bold text-blue-700 dark:text-blue-400 hover:underline"
                   >
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                     Datasheet / Pinout
                   </a>
                 ) : (
-                  <span className="text-[11px] text-slate-400">No datasheet</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">No datasheet</span>
                 )}
 
                 {item.owner && (
-                  <span className="text-[11px] text-slate-500 flex items-center gap-1">
-                    <User className="w-3 h-3" />
+                  <span className="text-xs text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <User className="w-3.5 h-3.5 text-slate-500" />
                     {item.owner.name}
                   </span>
                 )}

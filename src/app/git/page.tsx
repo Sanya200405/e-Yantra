@@ -291,12 +291,12 @@ export default function GitPage() {
                       {live.branches?.map((b: any, idx: number) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
+                          className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs"
                         >
-                          <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
+                          <span className="font-mono font-bold text-slate-900 dark:text-slate-100">
                             {b.name}
                           </span>
-                          <span className="font-mono text-[10px] text-slate-400">{b.sha}</span>
+                          <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300">{b.sha}</span>
                         </div>
                       ))}
                     </div>
@@ -306,17 +306,17 @@ export default function GitPage() {
                   {activeTab === 'issues' && (
                     <div className="space-y-2">
                       {live.issues?.length === 0 ? (
-                        <p className="text-xs text-slate-400 py-4">No open issues found</p>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 py-4 font-medium">No open issues found</p>
                       ) : (
                         live.issues.map((i: any) => (
                           <div
                             key={i.id}
-                            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
+                            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <AlertCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                              <span className="font-bold text-slate-400">#{i.number}</span>
-                              <p className="text-slate-800 dark:text-slate-200 font-medium truncate">
+                              <AlertCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                              <span className="font-bold text-slate-800 dark:text-slate-200">#{i.number}</span>
+                              <p className="text-slate-900 dark:text-slate-100 font-bold truncate">
                                 {i.title}
                               </p>
                             </div>
@@ -324,7 +324,7 @@ export default function GitPage() {
                               href={i.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 text-xs hover:underline shrink-0 ml-3"
+                              className="text-blue-700 dark:text-blue-400 font-bold text-xs hover:underline shrink-0 ml-3"
                             >
                               Open in GitHub →
                             </a>
@@ -338,17 +338,17 @@ export default function GitPage() {
                   {activeTab === 'prs' && (
                     <div className="space-y-2">
                       {live.pullRequests?.length === 0 ? (
-                        <p className="text-xs text-slate-400 py-4">No open pull requests</p>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 py-4 font-medium">No open pull requests</p>
                       ) : (
                         live.pullRequests.map((p: any) => (
                           <div
                             key={p.id}
-                            className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
+                            className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <GitPullRequest className="w-4 h-4 text-purple-500 shrink-0" />
-                              <span className="font-bold text-slate-400">#{p.number}</span>
-                              <p className="text-slate-800 dark:text-slate-200 font-medium truncate">
+                              <GitPullRequest className="w-4 h-4 text-purple-600 shrink-0" />
+                              <span className="font-bold text-slate-800 dark:text-slate-200">#{p.number}</span>
+                              <p className="text-slate-900 dark:text-slate-100 font-bold truncate">
                                 {p.title}
                               </p>
                             </div>
@@ -356,7 +356,7 @@ export default function GitPage() {
                               href={p.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 text-xs hover:underline shrink-0 ml-3"
+                              className="text-blue-700 dark:text-blue-400 font-bold text-xs hover:underline shrink-0 ml-3"
                             >
                               View PR →
                             </a>
@@ -372,18 +372,18 @@ export default function GitPage() {
                       {live.contributors?.map((c: any, idx: number) => (
                         <div
                           key={idx}
-                          className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs"
+                          className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs"
                         >
                           <img
                             src={c.avatarUrl}
                             alt={c.login}
-                            className="w-7 h-7 rounded-full"
+                            className="w-8 h-8 rounded-full"
                           />
                           <div className="min-w-0">
-                            <p className="font-bold text-slate-800 dark:text-slate-200 truncate">
+                            <p className="font-bold text-slate-900 dark:text-slate-100 truncate text-xs sm:text-sm">
                               {c.login}
                             </p>
-                            <p className="text-[10px] text-slate-400">
+                            <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
                               {c.contributions} commits
                             </p>
                           </div>

@@ -229,28 +229,28 @@ export default function MeetingsPage() {
               className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4"
             >
               {/* Meeting Header */}
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
                       Team Sync
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-semibold">
                       By {m.createdBy?.name || 'Team Member'}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
                     {m.title}
                   </h3>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 shrink-0">
-                  <span className="flex items-center gap-1 font-medium">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex items-center gap-3 text-xs text-slate-800 dark:text-slate-200 shrink-0">
+                  <span className="flex items-center gap-1 font-bold">
+                    <Calendar className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     {formatDate(m.date)}
                   </span>
                   {(m.startTime || m.endTime) && (
-                    <span className="flex items-center gap-1 text-slate-500">
+                    <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-medium font-mono">
                       <Clock className="w-3.5 h-3.5" />
                       {m.startTime} {m.endTime && `- ${m.endTime}`}
                     </span>
@@ -260,15 +260,15 @@ export default function MeetingsPage() {
                       href={m.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 font-semibold"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-bold border border-blue-200 dark:border-blue-800 transition-colors"
                     >
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-3.5 h-3.5" />
                       Join
                     </a>
                   )}
                   <button
                     onClick={() => handleDelete(m.id)}
-                    className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                    className="p-1.5 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -276,47 +276,47 @@ export default function MeetingsPage() {
               </div>
 
               {/* Agenda & Attendees */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
                 {m.agenda && (
                   <div>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                    <span className="font-bold text-slate-900 dark:text-slate-100 block mb-1">
                       Agenda:
                     </span>
-                    <p className="text-slate-600 dark:text-slate-400">{m.agenda}</p>
+                    <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-medium">{m.agenda}</p>
                   </div>
                 )}
                 {m.attendees && (
                   <div>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                    <span className="font-bold text-slate-900 dark:text-slate-100 block mb-1">
                       Attendees:
                     </span>
-                    <p className="text-slate-600 dark:text-slate-400">{m.attendees}</p>
+                    <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-medium">{m.attendees}</p>
                   </div>
                 )}
               </div>
 
               {/* Meeting Notes */}
               {m.notes && (
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 text-xs">
-                  <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm">
+                  <span className="font-bold text-slate-900 dark:text-slate-100 block mb-1">
                     Meeting Minutes / Notes:
                   </span>
-                  <p className="text-slate-600 dark:text-slate-300 whitespace-pre-wrap">{m.notes}</p>
+                  <p className="text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed font-medium">{m.notes}</p>
                 </div>
               )}
 
               {/* Decisions & Action Items Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 {/* Recorded Decisions */}
-                <div className="p-3.5 rounded-xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30">
-                  <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 mb-2">
+                <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40">
+                  <h4 className="text-xs sm:text-sm font-bold text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5 mb-2">
                     <FileCheck2 className="w-4 h-4 text-emerald-600" />
                     Decisions Taken
                   </h4>
                   {m.decisions?.length === 0 ? (
-                    <p className="text-[11px] text-slate-400 italic">No decisions recorded</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 italic">No decisions recorded</p>
                   ) : (
-                    <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium">
                       {m.decisions.map((d: any) => (
                         <li key={d.id} className="flex items-start gap-1.5">
                           <CheckCircle className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
