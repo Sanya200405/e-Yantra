@@ -28,6 +28,7 @@ model User {
   hardwareOwned     HardwareItem[]       @relation("HardwareOwner")
   resourcesAdded    Resource[]           @relation("AddedResources")
   actionItems       MeetingActionItem[]  @relation("ActionItemAssignee")
+  uploadedFiles     UploadedFile[]       @relation("UploadedFiles")
   activities        ActivityLog[]
 }
 
@@ -281,4 +282,21 @@ model BackupRecord {
   createdBy   String?
   notes       String?
   createdAt   DateTime @default(now())
+}
+
+model UploadedFile {
+  id           String    @id @default(cuid())
+  filename     String
+  storageKey   String    @unique
+  url          String
+  size         Int
+  mimeType     String
+  provider     String    @default("VERCEL_BLOB") // "VERCEL_BLOB" | "LOCAL"
+  category     String?   @default("GENERAL") // "RESOURCE" | "NOTE" | "GENERAL"
+  
+  uploadedById String?
+  uploadedBy   User?     @relation("UploadedFiles", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

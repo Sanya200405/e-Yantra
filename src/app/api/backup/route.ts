@@ -23,6 +23,7 @@ async function captureFullDatabaseSnapshot() {
     themes,
     resources,
     settings,
+    uploadedFiles,
   ] = await Promise.all([
     prisma.user.findMany(),
     prisma.task.findMany(),
@@ -39,6 +40,7 @@ async function captureFullDatabaseSnapshot() {
     prisma.theme.findMany(),
     prisma.resource.findMany(),
     prisma.systemSetting.findMany(),
+    prisma.uploadedFile.findMany(),
   ]);
 
   const totalRecords =
@@ -56,7 +58,8 @@ async function captureFullDatabaseSnapshot() {
     hardware.length +
     themes.length +
     resources.length +
-    settings.length;
+    settings.length +
+    uploadedFiles.length;
 
   const snapshotData = {
     version: '1.0.0',
@@ -78,6 +81,7 @@ async function captureFullDatabaseSnapshot() {
       themes,
       resources,
       settings,
+      uploadedFiles,
     },
   };
 
@@ -222,8 +226,18 @@ export async function POST(req: NextRequest) {
         await tx.meeting.deleteMany();
         await tx.lecture.deleteMany();
         await tx.techStackItem.deleteMany();
+        await tx.uploadedFile.deleteMany();
 
         // Restore independent models
+        for (const item of m.uploadedFiles || []) {
+          await tx.uploadedFile.create({
+            data: {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+              updatedAt: item.updatedAt ? new Date(item.updatedAt) : new Date(),
+            },
+          });
+        }
         for (const item of m.techStack || []) {
           await tx.techStackItem.create({ data: item });
         }

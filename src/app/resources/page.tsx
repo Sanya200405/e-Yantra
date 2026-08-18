@@ -15,6 +15,10 @@ import {
   Upload,
   Calendar,
   User,
+  CheckCircle2,
+  AlertCircle,
+  X,
+  FileCheck,
 } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Modal } from '@/components/ui/Modal';
@@ -36,8 +40,12 @@ export default function ResourcesPage() {
   const [category, setCategory] = useState('DOCUMENTATION');
   const [url, setUrl] = useState('');
   const [fileUrl, setFileUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [fileSize, setFileSize] = useState<number | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -80,8 +88,12 @@ export default function ResourcesPage() {
     setCategory('DOCUMENTATION');
     setUrl('');
     setFileUrl('');
+    setFileName('');
+    setFileSize(null);
     setIsBookmarked(false);
     setError('');
+    setUploadError(null);
+    setUploadProgress(null);
     setIsModalOpen(true);
   };
 
@@ -92,34 +104,70 @@ export default function ResourcesPage() {
     setCategory(r.category || 'DOCUMENTATION');
     setUrl(r.url || '');
     setFileUrl(r.fileUrl || '');
+    setFileName(r.title || '');
+    setFileSize(null);
     setIsBookmarked(r.isBookmarked || false);
     setError('');
+    setUploadError(null);
+    setUploadProgress(null);
     setIsModalOpen(true);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploadingFile(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setFileUrl(data.url);
-        if (!title) setTitle(data.fileName);
-      } else {
-        alert('File upload failed');
-      }
-    } catch (err) {
-      console.error('Upload error:', err);
-    } finally {
-      setUploadingFile(false);
+    
+    // Client-side quick validation (50 MB)
+    if (file.size > 50 * 1024 * 1024) {
+      setUploadError(`This file is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Maximum allowed size is 50 MB.`);
+      return;
     }
+
+    setUploadingFile(true);
+    setUploadProgress(0);
+    setUploadError(null);
+
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category', 'RESOURCE');
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percent);
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+          setFileUrl(data.url);
+          setFileName(data.fileName);
+          setFileSize(data.size);
+          setUploadProgress(100);
+          if (!title) setTitle(data.fileName);
+        } else {
+          setUploadError(data.error || 'Upload failed. Please try again.');
+          setUploadProgress(null);
+        }
+      } catch {
+        setUploadError('Server returned an unexpected response. Please try again.');
+        setUploadProgress(null);
+      } finally {
+        setUploadingFile(false);
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      setUploadError('Network error during file upload. Please check your connection and retry.');
+      setUploadProgress(null);
+      setUploadingFile(false);
+    });
+
+    xhr.open('POST', '/api/upload');
+    xhr.send(formData);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -437,27 +485,105 @@ export default function ResourcesPage() {
           </div>
 
           {/* File Upload Option */}
-          <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-              Or Upload Document (PDF / PPT / DOC / Image)
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Or Upload Document (PDF / PPT / DOC / Image / ZIP)
             </label>
-            <div className="flex items-center gap-3">
-              <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700">
-                <Upload className="w-3.5 h-3.5" />
-                {uploadingFile ? 'Uploading file...' : 'Choose File to Upload'}
-                <input
-                  type="file"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  disabled={uploadingFile}
-                />
-              </label>
-              {fileUrl && (
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                  ✓ File uploaded
-                </span>
-              )}
-            </div>
+
+            {/* Error Message */}
+            {uploadError && (
+              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 flex items-start gap-2 text-xs text-red-700 dark:text-red-300">
+                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold">{uploadError}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setUploadError(null)}
+                  className="text-red-500 hover:text-red-700 dark:text-red-400 p-0.5"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Progress Bar */}
+            {uploadingFile && uploadProgress !== null && (
+              <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 space-y-1.5">
+                <div className="flex items-center justify-between text-xs font-bold text-blue-700 dark:text-blue-300">
+                  <span className="flex items-center gap-1.5">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Uploading to cloud storage...
+                  </span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full h-2 bg-blue-200 dark:bg-blue-900 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-600 transition-all duration-200 ease-out"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Uploaded File Badge */}
+            {fileUrl ? (
+              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <FileCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200 truncate">
+                      {fileName || 'Uploaded Document'}
+                    </p>
+                    {fileSize && (
+                      <p className="text-[10px] text-emerald-700 dark:text-emerald-400 font-mono">
+                        {(fileSize / 1024 > 1024
+                          ? `${(fileSize / (1024 * 1024)).toFixed(1)} MB`
+                          : `${(fileSize / 1024).toFixed(0)} KB`)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold text-blue-700 dark:text-blue-400 hover:underline inline-flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Preview
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFileUrl('');
+                      setFileName('');
+                      setFileSize(null);
+                    }}
+                    className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                    title="Remove file"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors">
+                  <Upload className="w-4 h-4 text-blue-600" />
+                  {uploadingFile ? `Uploading (${uploadProgress ?? 0}%)...` : 'Choose File to Upload (Max 50 MB)'}
+                  <input
+                    type="file"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    disabled={uploadingFile}
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg,.webp,.gif,.svg,.txt,.csv,.json,.zip"
+                  />
+                </label>
+              </div>
+            )}
           </div>
 
           <div>
