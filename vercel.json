@@ -1,0 +1,6 @@
+{
+  "name": "yantrahub",
+  "framework": "nextjs",
+  "buildCommand": "prisma generate && prisma db push && next build",
+  "installCommand": "npm install"
+}

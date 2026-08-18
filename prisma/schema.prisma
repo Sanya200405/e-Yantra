@@ -1,0 +1,272 @@
+// Prisma schema configured for PostgreSQL (Supabase / Neon / Railway / Vercel Postgres)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("TEAM_MEMBER") // "ADMIN" | "TEAM_MEMBER"
+  avatarUrl    String?
+  bio          String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  assignedTasks     Task[]               @relation("AssignedTasks")
+  createdTasks      Task[]               @relation("CreatedTasks")
+  createdMeetings   Meeting[]            @relation("CreatedMeetings")
+  notes             Note[]               @relation("UserNotes")
+  selfStudies       SelfStudy[]          @relation("UserSelfStudies")
+  connectedGitRepos GitRepository[]      @relation("ConnectedGitRepos")
+  hardwareOwned     HardwareItem[]       @relation("HardwareOwner")
+  resourcesAdded    Resource[]           @relation("AddedResources")
+  actionItems       MeetingActionItem[]  @relation("ActionItemAssignee")
+  activities        ActivityLog[]
+}
+
+model Task {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  priority     String    @default("MEDIUM") // "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  status       String    @default("NOT_STARTED") // "NOT_STARTED" | "IN_PROGRESS" | "BLOCKED" | "COMPLETED"
+  startDate    DateTime?
+  dueDate      DateTime?
+  category     String    @default("General")
+  
+  assignedToId String?
+  assignedTo   User?     @relation("AssignedTasks", fields: [assignedToId], references: [id], onDelete: SetNull)
+  
+  createdById  String?
+  createdBy    User?     @relation("CreatedTasks", fields: [createdById], references: [id], onDelete: SetNull)
+
+  lectureId    String?
+  lecture      Lecture?  @relation(fields: [lectureId], references: [id], onDelete: SetNull)
+  
+  noteId       String?
+  note         Note?     @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  
+  hardwareId   String?
+  hardware     HardwareItem? @relation(fields: [hardwareId], references: [id], onDelete: SetNull)
+  
+  gitRepoId    String?
+  gitRepo      GitRepository? @relation(fields: [gitRepoId], references: [id], onDelete: SetNull)
+
+  actionItems  MeetingActionItem[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ClassSession {
+  id            String    @id @default(cuid())
+  title         String
+  instructor    String?
+  date          DateTime
+  startTime     String?
+  endTime       String?
+  meetingLink   String?
+  description   String?
+  notes         String?
+  recordingLink String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Meeting {
+  id          String    @id @default(cuid())
+  title       String
+  date        DateTime
+  startTime   String?
+  endTime     String?
+  meetingLink String?
+  agenda      String?
+  notes       String?
+  attendees   String?
+  
+  createdById String?
+  createdBy   User?     @relation("CreatedMeetings", fields: [createdById], references: [id], onDelete: SetNull)
+
+  decisions   MeetingDecision[]
+  actionItems MeetingActionItem[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model MeetingDecision {
+  id           String    @id @default(cuid())
+  meetingId    String
+  meeting      Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  decisionText String
+  createdAt    DateTime  @default(now())
+}
+
+model MeetingActionItem {
+  id                String    @id @default(cuid())
+  meetingId         String
+  meeting           Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  actionText        String
+  
+  assignedToId      String?
+  assignedTo        User?     @relation("ActionItemAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  
+  convertedToTaskId String?
+  convertedToTask   Task?     @relation(fields: [convertedToTaskId], references: [id], onDelete: SetNull)
+  
+  createdAt         DateTime  @default(now())
+}
+
+model Lecture {
+  id               String    @id @default(cuid())
+  title            String
+  description      String?
+  source           String?
+  lectureLink      String?
+  recordingLink    String?
+  slidesLink       String?
+  date             DateTime?
+  completionStatus String    @default("NOT_STARTED")
+  notes            String?
+  
+  tasks            Task[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Note {
+  id          String    @id @default(cuid())
+  title       String
+  content     String
+  category    String    @default("GENERAL")
+  tags        String?
+  attachments String?
+  
+  authorId    String?
+  author      User?     @relation("UserNotes", fields: [authorId], references: [id], onDelete: SetNull)
+
+  tasks       Task[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SelfStudy {
+  id           String    @id @default(cuid())
+  topic        String
+  description  String?
+  resourceLink String?
+  targetDate   DateTime?
+  status       String    @default("NOT_STARTED")
+  notes        String?
+  
+  assignedToId String?
+  assignedTo   User?     @relation("UserSelfStudies", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model GitRepository {
+  id             String    @id @default(cuid())
+  repositoryName String
+  repositoryUrl  String
+  platform       String    @default("GITHUB")
+  description    String?
+  githubOwner    String?
+  githubRepo     String?
+  
+  connectedById  String?
+  connectedBy    User?     @relation("ConnectedGitRepos", fields: [connectedById], references: [id], onDelete: SetNull)
+
+  tasks          Task[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model TechStackItem {
+  id                String    @id @default(cuid())
+  technology        String
+  category          String    @default("Robotics")
+  status            String    @default("LEARNING")
+  documentationLink String?
+  learningResource  String?
+  notes             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model HardwareItem {
+  id            String    @id @default(cuid())
+  componentName String
+  category      String    @default("Sensors")
+  quantity      Int       @default(1)
+  status        String    @default("AVAILABLE")
+  location      String?
+  purchaseInfo  String?
+  datasheetUrl  String?
+  notes         String?
+  
+  ownerId       String?
+  owner         User?     @relation("HardwareOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  tasks         Task[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Theme {
+  id              String    @id @default(cuid())
+  themeName       String
+  description     String?
+  officialLink    String?
+  selectedStatus  String    @default("EXPLORING")
+  difficultyNotes String?
+  technologies    String?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Resource {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  category     String    @default("DOCUMENTATION")
+  url          String?
+  fileUrl      String?
+  isBookmarked Boolean   @default(false)
+  
+  addedById    String?
+  addedBy      User?     @relation("AddedResources", fields: [addedById], references: [id], onDelete: SetNull)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ActivityLog {
+  id          String    @id @default(cuid())
+  userId      String?
+  userName    String
+  actionType  String
+  entityType  String
+  entityId    String?
+  description String
+  createdAt   DateTime  @default(now())
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
