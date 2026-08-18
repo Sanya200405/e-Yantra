@@ -8,7 +8,7 @@ if (fs.existsSync(schemaPath)) {
   const isPostgres = dbUrl.startsWith('postgresql://') || dbUrl.startsWith('postgres://');
   const targetProvider = isPostgres ? 'postgresql' : 'sqlite';
 
-  console.log(`[Prisma Config] Configuring provider "${targetProvider}" for DATABASE_URL prefix`);
+  console.log(`[Prisma Config] Configuring provider "${targetProvider}" (PostgreSQL detected: ${isPostgres})`);
   schema = schema.replace(/provider\s*=\s*"(sqlite|postgresql)"/, `provider = "${targetProvider}"`);
   fs.writeFileSync(schemaPath, schema);
 }
