@@ -7,7 +7,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { SearchModal } from '../ui/SearchModal';
 import { QuickActionModal } from '../ui/QuickActionModal';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Bot } from 'lucide-react';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -52,9 +52,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
-        <p className="text-xs font-medium">Loading e-Yantra Workspace...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-white cyber-grid">
+        <div className="w-12 h-12 rounded-2xl bg-orange-600 flex items-center justify-center shadow-neon-orange mb-3 animate-pulse">
+          <Bot className="w-6 h-6 text-white" />
+        </div>
+        <p className="text-xs font-mono font-bold uppercase tracking-widest text-slate-300">
+          INITIALIZING YANTRAHUB TELEMETRY...
+        </p>
       </div>
     );
   }
@@ -64,7 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col cyber-grid transition-colors duration-200">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="lg:pl-64 flex flex-col flex-1 min-w-0">
@@ -84,7 +88,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         isOpen={quickActionOpen}
         onClose={() => setQuickActionOpen(false)}
         onSuccess={() => {
-          // Trigger reloads on current view if needed
           window.dispatchEvent(new CustomEvent('workspace-updated'));
         }}
       />
