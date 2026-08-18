@@ -269,3 +269,16 @@ model SystemSetting {
   value     String
   updatedAt DateTime @updatedAt
 }
+
+model BackupRecord {
+  id          String   @id @default(cuid())
+  backupType  String   @default("MANUAL") // "MANUAL" | "AUTOMATIC" | "SAFETY_PRE_RESTORE"
+  status      String   @default("SUCCESS") // "SUCCESS" | "FAILED"
+  sizeBytes   Int      @default(0)
+  recordCount Int      @default(0)
+  dataJson    String   // Full JSON snapshot serialized
+  checksum    String?
+  createdBy   String?
+  notes       String?
+  createdAt   DateTime @default(now())
+}

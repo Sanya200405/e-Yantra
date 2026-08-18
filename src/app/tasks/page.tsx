@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import {
   CheckSquare,
   Plus,
@@ -28,6 +29,7 @@ import { formatDate, isOverdue } from '@/lib/utils';
 
 export default function TasksPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const [tasks, setTasks] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [lectures, setLectures] = useState<any[]>([]);
@@ -76,48 +78,45 @@ export default function TasksPage() {
     }
   };
 
-  const fetchRelatedData = async () => {
+  const fetchRelations = async () => {
     try {
-      const [membersRes, lectRes, notesRes, hwRes, gitRes] = await Promise.all([
+      const [mRes, lRes, nRes, hRes, gRes] = await Promise.all([
         fetch('/api/settings'),
         fetch('/api/lectures'),
         fetch('/api/notes'),
         fetch('/api/hardware'),
         fetch('/api/git'),
       ]);
-      if (membersRes.ok) {
-        const d = await membersRes.json();
+
+      if (mRes.ok) {
+        const d = await mRes.json();
         setTeamMembers(d.teamMembers || []);
       }
-      if (lectRes.ok) setLectures(await lectRes.json());
-      if (notesRes.ok) setNotes(await notesRes.json());
-      if (hwRes.ok) setHardware(await hwRes.json());
-      if (gitRes.ok) {
-        const d = await gitRes.json();
-        setGitRepos(d.repositories || []);
+      if (lRes.ok) setLectures(await lRes.json());
+      if (nRes.ok) setNotes(await nRes.json());
+      if (hRes.ok) setHardware(await hRes.json());
+      if (gRes.ok) {
+        const gd = await gRes.json();
+        setGitRepos(gd.repositories || []);
       }
-    } catch (err) {
-      console.error('Failed to fetch relation data:', err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
     fetchTasks();
-    fetchRelatedData();
-    const handleUpdate = () => fetchTasks();
-    window.addEventListener('workspace-updated', handleUpdate);
-    return () => window.removeEventListener('workspace-updated', handleUpdate);
+    fetchRelations();
   }, []);
 
-  const openAddModal = () => {
+  const openAddModal = (defaultStatus?: string | React.MouseEvent) => {
+    const statusVal = typeof defaultStatus === 'string' ? defaultStatus : 'NOT_STARTED';
     setEditingTask(null);
     setTitle('');
     setDescription('');
     setPriority('MEDIUM');
-    setStatus('NOT_STARTED');
+    setStatus(statusVal);
     setCategory('General');
     setDueDate('');
-    setAssignedToId(user?.id || '');
+    setAssignedToId('');
     setLectureId('');
     setNoteId('');
     setHardwareId('');
@@ -175,13 +174,16 @@ export default function TasksPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
+        toast.success(editingTask ? 'Task updated ✓' : 'Task created ✓', `"${title}" saved to workspace.`);
         fetchTasks();
       } else {
         const d = await res.json();
         setError(d.error || 'Failed to save task');
+        toast.error('Save failed', d.error);
       }
     } catch (err: any) {
       setError(err.message);
+      toast.error('Network error', err.message);
     } finally {
       setFormLoading(false);
     }
@@ -195,10 +197,14 @@ export default function TasksPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
+        toast.success('Task status updated ✓', `Moved to ${newStatus.replace('_', ' ')}`);
         fetchTasks();
+      } else {
+        toast.error('Status update failed');
       }
     } catch (err) {
       console.error('Status update error:', err);
+      toast.error('Network error');
     }
   };
 
@@ -207,10 +213,14 @@ export default function TasksPage() {
     try {
       const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
       if (res.ok) {
+        toast.success('Task deleted');
         fetchTasks();
+      } else {
+        toast.error('Delete failed');
       }
     } catch (err) {
       console.error('Delete error:', err);
+      toast.error('Network error');
     }
   };
 

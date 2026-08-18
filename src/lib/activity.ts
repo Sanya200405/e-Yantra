@@ -3,7 +3,7 @@ import prisma from './prisma';
 interface LogActivityParams {
   userId?: string | null;
   userName: string;
-  actionType: 'CREATED' | 'UPDATED' | 'DELETED' | 'COMPLETED' | 'CONVERTED' | 'CONNECTED';
+  actionType: 'CREATED' | 'UPDATED' | 'DELETED' | 'COMPLETED' | 'CONVERTED' | 'CONNECTED' | 'BACKUP' | 'RESTORE';
   entityType:
     | 'TASK'
     | 'CLASS'
@@ -16,7 +16,8 @@ interface LogActivityParams {
     | 'THEME'
     | 'RESOURCE'
     | 'GIT_REPO'
-    | 'USER';
+    | 'USER'
+    | 'BACKUP';
   entityId?: string | null;
   description: string;
 }

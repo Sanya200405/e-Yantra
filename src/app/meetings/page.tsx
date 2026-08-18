@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import {
   Users2,
   Plus,
@@ -22,6 +23,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function MeetingsPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const [meetings, setMeetings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -69,12 +71,12 @@ export default function MeetingsPage() {
     setEditingMeeting(null);
     setTitle('');
     setDate(new Date().toISOString().split('T')[0]);
-    setStartTime('');
-    setEndTime('');
+    setStartTime('16:00');
+    setEndTime('17:00');
     setMeetingLink('');
     setAgenda('');
     setNotes('');
-    setAttendees('');
+    setAttendees(user?.name || '');
     setDecisions([]);
     setActionItems([]);
     setError('');
@@ -87,15 +89,23 @@ export default function MeetingsPage() {
     setNewDecisionInput('');
   };
 
+  const handleRemoveDecision = (idx: number) => {
+    setDecisions(decisions.filter((_, i) => i !== idx));
+  };
+
   const handleAddActionItem = () => {
     if (!newActionInput.trim()) return;
     setActionItems([...actionItems, { actionText: newActionInput.trim() }]);
     setNewActionInput('');
   };
 
+  const handleRemoveActionItem = (idx: number) => {
+    setActionItems(actionItems.filter((_, i) => i !== idx));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !date) return;
+    if (!title.trim() || !date) return;
     setFormLoading(true);
     setError('');
 
@@ -121,13 +131,16 @@ export default function MeetingsPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
+        toast.success('Meeting recorded ✓', `"${title}" logged to workspace.`);
         fetchMeetings();
       } else {
         const d = await res.json();
         setError(d.error || 'Failed to save meeting');
+        toast.error('Save failed', d.error);
       }
     } catch (err: any) {
       setError(err.message);
+      toast.error('Network error', err.message);
     } finally {
       setFormLoading(false);
     }
@@ -138,10 +151,14 @@ export default function MeetingsPage() {
     try {
       const res = await fetch(`/api/meetings/${id}`, { method: 'DELETE' });
       if (res.ok) {
+        toast.success('Meeting record deleted');
         fetchMeetings();
+      } else {
+        toast.error('Delete failed');
       }
     } catch (err) {
       console.error('Delete error:', err);
+      toast.error('Network error');
     }
   };
 
@@ -154,13 +171,15 @@ export default function MeetingsPage() {
         body: JSON.stringify({ actionItemId }),
       });
       if (res.ok) {
+        toast.success('Action item converted to task ✓', 'Task is now available in your Tasks Kanban board.');
         fetchMeetings();
       } else {
         const d = await res.json();
-        alert(d.error || 'Failed to convert action item to task');
+        toast.error('Conversion failed', d.error);
       }
     } catch (err) {
       console.error('Conversion error:', err);
+      toast.error('Network error');
     } finally {
       setConvertingId(null);
     }
