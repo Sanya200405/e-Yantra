@@ -365,12 +365,22 @@ export default function SelfStudyPage() {
                 className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
               >
                 <option value="">Unassigned</option>
+                {!editingTopic && teamMembers.length > 0 && (
+                  <option value="ALL_MEMBERS" className="font-bold text-blue-600 dark:text-blue-400">
+                    ⚡ Assign to All Team Members ({teamMembers.length})
+                  </option>
+                )}
                 {teamMembers.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name}
                   </option>
                 ))}
               </select>
+              {assignedToId === 'ALL_MEMBERS' && (
+                <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 mt-1">
+                  ⚡ Assigns a self-study roadmap to all {teamMembers.length} team members at once.
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">

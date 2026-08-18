@@ -705,12 +705,22 @@ export default function TasksPage() {
               className="w-full px-3 py-2 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
             >
               <option value="">Unassigned</option>
+              {!editingTask && teamMembers.length > 0 && (
+                <option value="ALL_MEMBERS" className="font-bold text-blue-600 dark:text-blue-400">
+                  ⚡ Assign to All Team Members ({teamMembers.length})
+                </option>
+              )}
               {teamMembers.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.name} ({m.role})
                 </option>
               ))}
             </select>
+            {assignedToId === 'ALL_MEMBERS' && (
+              <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1.5 flex items-center gap-1">
+                <span>⚡</span> Will create and assign a separate task copy to all {teamMembers.length} team members simultaneously.
+              </p>
+            )}
           </div>
 
           {/* Relational Links */}

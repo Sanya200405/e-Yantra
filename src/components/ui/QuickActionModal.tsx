@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from './Modal';
 import { CheckSquare, Calendar, FileText, Bookmark, Loader2 } from 'lucide-react';
 
@@ -14,12 +14,14 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
   const [activeTab, setActiveTab] = useState<'task' | 'meeting' | 'note' | 'resource'>('task');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
 
   // Task state
   const [taskTitle, setTaskTitle] = useState('');
   const [taskPriority, setTaskPriority] = useState('MEDIUM');
   const [taskDueDate, setTaskDueDate] = useState('');
   const [taskCategory, setTaskCategory] = useState('General');
+  const [taskAssignedToId, setTaskAssignedToId] = useState('');
 
   // Meeting state
   const [meetingTitle, setMeetingTitle] = useState('');
@@ -37,6 +39,15 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
   const [resourceUrl, setResourceUrl] = useState('');
   const [resourceCategory, setResourceCategory] = useState('DOCUMENTATION');
 
+  useEffect(() => {
+    if (isOpen) {
+      fetch('/api/settings')
+        .then((res) => res.json())
+        .then((d) => setTeamMembers(d.teamMembers || []))
+        .catch(() => {});
+    }
+  }, [isOpen]);
+
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskTitle.trim()) return;
@@ -51,11 +62,13 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
           priority: taskPriority,
           dueDate: taskDueDate || null,
           category: taskCategory,
+          assignedToId: taskAssignedToId || null,
         }),
       });
       if (res.ok) {
         setTaskTitle('');
         setTaskDueDate('');
+        setTaskAssignedToId('');
         onSuccess?.();
         onClose();
       } else {
@@ -280,13 +293,42 @@ export function QuickActionModal({ isOpen, onClose, onSuccess }: QuickActionModa
               />
             </div>
           </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
+              Assigned Member
+            </label>
+            <select
+              value={taskAssignedToId}
+              onChange={(e) => setTaskAssignedToId(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
+            >
+              <option value="">Unassigned</option>
+              {teamMembers.length > 0 && (
+                <option value="ALL_MEMBERS" className="font-bold text-blue-600 dark:text-blue-400">
+                  ⚡ Assign to All Team Members ({teamMembers.length})
+                </option>
+              )}
+              {teamMembers.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name} ({m.role})
+                </option>
+              ))}
+            </select>
+            {taskAssignedToId === 'ALL_MEMBERS' && (
+              <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1.5">
+                ⚡ Will create and assign a copy to all {teamMembers.length} team members at once.
+              </p>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={loading}
             className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-neon-blue disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            Create Task
+            {taskAssignedToId === 'ALL_MEMBERS' ? `Assign to All ${teamMembers.length} Members` : 'Create Task'}
           </button>
         </form>
       )}

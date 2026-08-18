@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
       dueDate,
       category,
       assignedToId,
+      assignToAll,
       lectureId,
       noteId,
       hardwareId,
@@ -84,6 +85,61 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
+    // Bulk assign to all team members at once
+    if (assignedToId === 'ALL_MEMBERS' || assignToAll) {
+      const members = await prisma.user.findMany({
+        select: { id: true, name: true, email: true, role: true, avatarUrl: true },
+      });
+
+      if (members.length > 0) {
+        const createdTasks = await prisma.$transaction(
+          members.map((m) =>
+            prisma.task.create({
+              data: {
+                title: title.trim(),
+                description: description?.trim() || null,
+                priority: priority || 'MEDIUM',
+                status: status || 'NOT_STARTED',
+                startDate: startDate ? new Date(startDate) : null,
+                dueDate: dueDate ? new Date(dueDate) : null,
+                category: category || 'General',
+                assignedToId: m.id,
+                createdById: user.id,
+                lectureId: lectureId || null,
+                noteId: noteId || null,
+                hardwareId: hardwareId || null,
+                gitRepoId: gitRepoId || null,
+              },
+              include: {
+                assignedTo: {
+                  select: { id: true, name: true, email: true, avatarUrl: true },
+                },
+              },
+            })
+          )
+        );
+
+        await logActivity({
+          userId: user.id,
+          userName: user.name,
+          actionType: 'CREATED',
+          entityType: 'TASK',
+          entityId: createdTasks[0]?.id || 'bulk',
+          description: `${user.name} created and assigned task "${title.trim()}" to all ${members.length} team members`,
+        });
+
+        return NextResponse.json(
+          {
+            message: `Assigned task to all ${members.length} team members`,
+            tasks: createdTasks,
+            count: createdTasks.length,
+          },
+          { status: 201 }
+        );
+      }
+    }
+
+    // Single task assignment
     const task = await prisma.task.create({
       data: {
         title: title.trim(),

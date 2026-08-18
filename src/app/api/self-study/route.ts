@@ -38,10 +38,58 @@ export async function POST(req: NextRequest) {
   try {
     const user = await requireAuth(req);
     const body = await req.json();
-    const { topic, description, resourceLink, targetDate, status, notes, assignedToId } = body;
+    const { topic, description, resourceLink, targetDate, status, notes, assignedToId, assignToAll } = body;
 
     if (!topic || !topic.trim()) {
       return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
+    }
+
+    // Bulk assign self-study topic to all team members at once
+    if (assignedToId === 'ALL_MEMBERS' || assignToAll) {
+      const members = await prisma.user.findMany({
+        select: { id: true, name: true, email: true, role: true, avatarUrl: true },
+      });
+
+      if (members.length > 0) {
+        const createdTopics = await prisma.$transaction(
+          members.map((m) =>
+            prisma.selfStudy.create({
+              data: {
+                topic: topic.trim(),
+                description: description?.trim() || null,
+                resourceLink: resourceLink?.trim() || null,
+                targetDate: targetDate ? new Date(targetDate) : null,
+                status: status || 'NOT_STARTED',
+                notes: notes?.trim() || null,
+                assignedToId: m.id,
+              },
+              include: {
+                assignedTo: {
+                  select: { id: true, name: true, email: true, avatarUrl: true },
+                },
+              },
+            })
+          )
+        );
+
+        await logActivity({
+          userId: user.id,
+          userName: user.name,
+          actionType: 'CREATED',
+          entityType: 'SELF_STUDY',
+          entityId: createdTopics[0]?.id || 'bulk',
+          description: `${user.name} assigned self-study topic "${topic.trim()}" to all ${members.length} team members`,
+        });
+
+        return NextResponse.json(
+          {
+            message: `Assigned topic to all ${members.length} team members`,
+            items: createdTopics,
+            count: createdTopics.length,
+          },
+          { status: 201 }
+        );
+      }
     }
 
     const item = await prisma.selfStudy.create({
