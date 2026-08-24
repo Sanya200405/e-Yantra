@@ -17,20 +17,20 @@ export const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
   'application/vnd.ms-powerpoint': ['.ppt'],
   'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'],
-  
+
   // Images
   'image/png': ['.png'],
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/webp': ['.webp'],
   'image/gif': ['.gif'],
   'image/svg+xml': ['.svg'],
-  
+
   // Text & Code
   'text/plain': ['.txt', '.log'],
   'text/csv': ['.csv'],
   'text/markdown': ['.md'],
   'application/json': ['.json'],
-  
+
   // Archives & Firmware
   'application/zip': ['.zip'],
   'application/x-zip-compressed': ['.zip'],
@@ -41,7 +41,7 @@ export const ALLOWED_MIME_TYPES: Record<string, string[]> = {
 
 export function validateFileType(mimeType: string, filename: string): { valid: boolean; reason?: string } {
   const ext = path.extname(filename).toLowerCase();
-  
+
   // Block dangerous executable extensions
   const dangerousExtensions = [
     '.exe', '.bat', '.cmd', '.sh', '.vbs', '.js', '.ts', '.jsx', '.tsx',
@@ -125,90 +125,55 @@ export async function uploadToStorage(
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // 3. Cloud Object Storage (Vercel Blob) if token is configured
-  if (hasBlobToken) {
-    let uploadedBlobUrl: string | null = null;
-    try {
-      const blob = await put(storagePath, file, {
-        access: 'public',
-        contentType: file.type || 'application/octet-stream',
-        addRandomSuffix: false,
-      });
-      uploadedBlobUrl = blob.url;
-
-      const fileRecord = await prisma.uploadedFile.create({
-        data: {
-          filename: file.name,
-          storageKey: blob.pathname || storagePath,
-          url: blob.url,
-          size: file.size,
-          mimeType: file.type || 'application/octet-stream',
-          provider: 'VERCEL_BLOB',
-          category: category,
-          uploadedById: userId || null,
-        },
-      });
-
-      return {
-        id: fileRecord.id,
-        url: fileRecord.url,
-        storageKey: fileRecord.storageKey,
-        fileName: fileRecord.filename,
-        size: fileRecord.size,
-        mimeType: fileRecord.mimeType,
-        provider: 'VERCEL_BLOB',
-        category: category,
-        uploadedBy: userName,
-        createdAt: fileRecord.createdAt,
-      };
-    } catch (blobError: any) {
-      console.error('Vercel Blob upload failed, falling back to persistent database storage:', blobError);
-      // Clean up orphaned blob if database record creation failed
-      if (uploadedBlobUrl) {
-        try {
-          await del(uploadedBlobUrl);
-        } catch {}
-      }
-    }
+  if (!hasBlobToken) {
+    throw new Error('STORAGE_NOT_CONFIGURED: Cloud file storage is unavailable. Vercel Blob token is missing in environment variables.');
   }
 
-  // 4. Instant Zero-Config Database Storage Fallback (Permanent across server restarts and redeployments)
-  const base64Data = buffer.toString('base64');
-  const tempId = `file_${uniquePrefix}`;
+  let uploadedBlobUrl: string | null = null;
+  try {
+    const blob = await put(storagePath, file, {
+      access: 'public',
+      contentType: file.type || 'application/octet-stream',
+      addRandomSuffix: false,
+    });
+    uploadedBlobUrl = blob.url;
 
-  const fileRecord = await prisma.uploadedFile.create({
-    data: {
-      filename: file.name,
-      storageKey: storagePath,
-      url: `/api/upload/${tempId}`,
-      size: file.size,
-      mimeType: file.type || 'application/octet-stream',
-      dataBase64: base64Data,
-      provider: 'DATABASE',
+    const fileRecord = await prisma.uploadedFile.create({
+      data: {
+        filename: file.name,
+        storageKey: blob.pathname || storagePath,
+        url: blob.url,
+        size: file.size,
+        mimeType: file.type || 'application/octet-stream',
+        provider: 'VERCEL_BLOB',
+        category: category,
+        uploadedById: userId || null,
+      },
+    });
+
+    return {
+      id: fileRecord.id,
+      url: fileRecord.url,
+      storageKey: fileRecord.storageKey,
+      fileName: fileRecord.filename,
+      size: fileRecord.size,
+      mimeType: fileRecord.mimeType,
+      provider: 'VERCEL_BLOB',
       category: category,
-      uploadedById: userId || null,
-    },
-  });
+      uploadedBy: userName,
+      createdAt: fileRecord.createdAt,
+    };
+  } catch (blobError: any) {
+    console.error('Vercel Blob upload failed:', blobError);
 
-  // Update URL to point to its permanent retrieval endpoint
-  const permanentUrl = `/api/upload/${fileRecord.id}`;
-  await prisma.uploadedFile.update({
-    where: { id: fileRecord.id },
-    data: { url: permanentUrl },
-  });
-
-  return {
-    id: fileRecord.id,
-    url: permanentUrl,
-    storageKey: fileRecord.storageKey,
-    fileName: fileRecord.filename,
-    size: fileRecord.size,
-    mimeType: fileRecord.mimeType,
-    provider: 'DATABASE',
-    category: category,
-    uploadedBy: userName,
-    createdAt: fileRecord.createdAt,
-  };
+    // Clean up orphaned blob if database record creation failed
+    if (uploadedBlobUrl) {
+      try {
+        await del(uploadedBlobUrl);
+      } catch { }
+    }
+    throw new Error(`Failed to upload file to cloud storage: ${blobError.message}`);
+  }
 }
 
 /**

@@ -66,9 +66,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (error.message?.includes('Vercel Blob Storage is not configured')) {
+    if (error.message?.includes('Vercel Blob Storage is not configured') || error.message?.includes('STORAGE_NOT_CONFIGURED')) {
       return NextResponse.json(
-        { 
+        {
           error: 'Cloud file storage is temporarily unavailable. Vercel Blob token is required on production deployments.',
           code: 'STORAGE_NOT_CONFIGURED'
         },
